@@ -9,3 +9,15 @@
     </div>
   </div>
 </template>
+
+
+<script setup lang="ts">
+useSeoMeta({
+  title: 'SET Analytics',
+  ogTitle: 'SET Analytics',
+  description: '',
+  ogDescription: '',
+  ogImage: 'https://example.com/image.png',
+  twitterCard: '',
+})
+</script>
