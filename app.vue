@@ -3,7 +3,7 @@
     <NuxtRouteAnnouncer/>
     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
       <h2>
-        This is Productions
+        This is develop
       </h2>
       <p>Peerasit Ployaram</p>
     </div>
