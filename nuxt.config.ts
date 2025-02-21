@@ -4,6 +4,24 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       typhon_api: process.env.TYPHOON_API,
+      api_path: process.env.BACKEND_API_PATH
     }
-  }
+  },
+  css: [
+    './assets/css/main.css',
+    '@fortawesome/fontawesome-free/css/all.min.css'
+  ],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+  modules: [
+    '@pinia/nuxt',
+  ],
+  plugins: [
+    '@/plugins/websocket.client.js',
+    "@/plugins/bus"
+  ]
 })
