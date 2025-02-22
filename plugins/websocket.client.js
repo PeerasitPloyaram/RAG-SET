@@ -10,7 +10,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   };
 
   socket.onmessage = (event) => {
-    alert(`Notification: ${event.data}`);
+    nuxtApp.$bus.emit("toast", {
+      title: "New Notification",
+      message: event.data,
+    });
   };
 
   socket.onerror = (error) => {

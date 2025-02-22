@@ -22,6 +22,7 @@ export default defineNuxtConfig({
   ],
   plugins: [
     '@/plugins/websocket.client.js',
-    "@/plugins/bus"
+    "@/plugins/bus",
+    "@/plugins/client-id.js"
   ]
 })
