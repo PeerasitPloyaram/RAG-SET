@@ -4,7 +4,7 @@
         <div class="m-4">
             <h1 class="text-white text-2xl">Sign Up</h1>
         </div>
-        <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" v-model="username"/>
+        <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" placeholder="you@example.com" v-model="username"/>
         <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" v-model="password"/>
 
         <div class="h-10">

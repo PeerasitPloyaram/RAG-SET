@@ -4,7 +4,7 @@
           <div class="m-4">
               <h1 class="text-white text-2xl">Sign In</h1>
           </div>
-          <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" v-model="username"/>
+          <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" placeholder="username" v-model="username"/>
           <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" v-model="password"/>
   
           <div class="h-10">
@@ -22,13 +22,18 @@
   </template>
   
   <script setup lang="ts">
+  import { onMounted } from 'vue';
+  import { useCookie } from '#app';
   import { login } from '@/composables/apiService';
-  
   import { ref } from 'vue';
-  
+  import { CookieStorageSetExpire } from '@/composables/utils'
+
   const username = ref("")
   const password = ref("")
   const error_input = ref("")
+  const router = useRouter()
+  
+  
   
   const validateInput = (username:string, password:string) => {
     if (username == "" || password == ""){
@@ -44,6 +49,17 @@
       const res = await login(username.value, password.value)
       if (res?.data.status != true){
         error_input.value = "Username or Password incorrect"
+      }
+      else{
+        // store.saveAuth(res.data.role, res.data.username)
+        // console.log(res.data.username, res.data.role);
+        const user_id = res.data.user_id
+        console.log(user_id);
+        CookieStorageSetExpire("stl_id", user_id)
+
+        // Read the cookie value
+        error_input.value = ""
+        navigateTo("/chat")
       }
     }
   }
