@@ -1,7 +1,7 @@
 <template>
     <Header />
   
-    <div class="flex flex-row m w-full h-full">
+    <div class="flex flex-col m w-full h-full md:flex-row">
         <div class="bg-[#171717] rounded-lg border border-[#3c3c3c] flex flex-col m-2 w-full">
 
             <div class="m-4 flex flex-col">

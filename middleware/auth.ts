@@ -1,20 +1,18 @@
-import { CookieStorageSetExpire } from "@/composables/utils"
 import { auth } from "@/composables/apiService";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-        const router = useRouter()
         const myCookie = useCookie('stl_id');
-        console.log("COOKIE",myCookie.value);
+        const user_auth = myCookie.value ? JSON.parse(myCookie.value) : null;
+        // console.log("COOKIE", user_auth);
             
         
-        if (!myCookie.value){
+        if (!user_auth){
             if (to.path != "/chat"){
                 return navigateTo("/chat")
             }
 
         }else{
-            // CALL AUTH API
-            const res = await auth(myCookie.value.toString())
+            const res = await auth(user_auth.user_id.toString())
             if (from.path == "/admin" && res?.data.role !== "admin"){
                 return navigateTo("/test2")
             }
