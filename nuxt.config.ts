@@ -4,7 +4,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       typhon_api: process.env.TYPHOON_API,
-      api_path: process.env.BACKEND_API_PATH
+      api_path: process.env.BACKEND_API_PATH,
+      api_websocket: process.env.BACKEND_WEB_SOCKET_API_PATH
     }
   },
   css: [
