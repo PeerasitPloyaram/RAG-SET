@@ -4,13 +4,13 @@
             <a href="/chat" class="text-white text-xl">STELLA</a>
         </div>
         <div class="flex flex-row items-center"v-if=show_auth >
-            <button class="text-white m-2 bg-orange-700 w-20 h-8 rounded-lg" @click="goToLogin">SignIn</button>
-            <button class="text-white m-2 bg-[#262626] hover:bg-[#171717] w-20 h-8 rounded-lg" @click="goToSignUp">SignUp</button>
+            <button class="text-white m-2 bg-orange-700 w-20 h-8 rounded-lg transition-colors" @click="goToLogin">SignIn</button>
+            <button class="text-white m-2 bg-[#262626] hover:bg-[#171717] w-20 h-8 rounded-lg transition-colors" @click="goToSignUp">SignUp</button>
         </div>
         <div class="flex flex-row items-center"v-if=show_profile>
             <p class="text-white ml-4 mr-4 text-xl">{{ username }}</p>
-            <button class="text-white m-2 bg-orange-700 hover:bg-orange-900 w-20 h-8 rounded-lg" @click="goToManage" v-if="showManageButton">Manage</button>
-            <button class="text-white m-2 bg-[#262626] hover:bg-[#171717] w-20 h-8 rounded-lg" @click="goTologOut">LogOut</button>
+            <button class="text-white m-2 bg-orange-700 hover:bg-orange-900 w-20 h-8 rounded-lg transition-colors" @click="goToManage" v-if="showManageButton">Manage</button>
+            <button class="text-white m-2 bg-[#262626] hover:bg-[#171717] w-20 h-8 rounded-lg transition-colors" @click="goTologOut">LogOut</button>
         </div>
     </div>
     <div class="flex flex-grow">

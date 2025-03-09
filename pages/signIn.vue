@@ -8,7 +8,7 @@
         
             <div class="max-w-sm">
                 <div class="relative">
-                    <input v-model="password" :type=showPassword class="w-60 h-14 py-2.5 sm:py-3 ps-4 pe-10 block border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-[#262626] dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter password">
+                    <input @keyup.enter="requestLogin" v-model="password" :type=showPassword class="w-60 h-14 py-2.5 sm:py-3 ps-4 pe-10 block border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-[#262626] dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter password">
                     <button @click="showPasswordIcon" type="button" class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden focus:text-orange-600 dark:text-neutral-600 dark:focus:text-orange-500">
                     <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
@@ -26,7 +26,7 @@
                 <p class="text-red-500">{{ error_input }}</p>
             </div>
             
-            <button class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 text-white text-xl bg-orange-700 hover:bg-orange-900" @click="requestLogin">SignIn</button>
+            <button class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 text-white text-xl bg-orange-700 hover:bg-orange-900 transition-colors" @click="requestLogin">SignIn</button>
             <div class="mt-4">
                 <p class="text-neutral-600">No account?<a href="/signUp" class="ml-2 text-orange-700">Sign up</a></p>
             </div>

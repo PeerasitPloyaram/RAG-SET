@@ -29,9 +29,9 @@
 				<!-- Chat history list with scrolling -->
 				<div class="flex flex-col w-full px-3 space-y-2 text-white  h-96" style="max-height: 40rem;">
 					<div class="flex flex-col overflow-auto">
-						<button class="bg-[#171717] hover:bg-[#101010] rounded-lg pt-3 pb-3 mt-2 mb-2 flex flex-row justify-between items-centers pl-2" @click="getSession(chat, $event)" v-for="(chat) in chatHistory" :key="chat.session_id">
+						<button class="bg-[#171717] hover:bg-[#101010] rounded-lg pt-3 pb-3 mt-2 mb-2 flex flex-row justify-between items-centers transition-colors pl-2" @click="getSession(chat, $event)" v-for="(chat) in chatHistory" :key="chat.session_id">
 							{{ chat.name }}
-							<span class="w-5 h-5 text-neutral-500 hover:text-white cursor-pointer mr-2" @click.stop="togglePopup(chat.session_id, $event)">
+							<span class="w-5 h-5 text-neutral-500 hover:text-white cursor-pointer mr-2 transition-colors" @click.stop="togglePopup(chat.session_id, $event)">
 								<i class="fa-solid fa-ellipsis"></i>
 							</span>
 						</button>
