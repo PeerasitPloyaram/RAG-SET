@@ -1,6 +1,6 @@
 <template>
     <div class="sticky top-0 bg-[#0c0c0c] bg-opacity-30 h-16 flex justify-between items-center px-4">
-        <div class="flex flex-row items-center ml-2">
+        <div class="flex flex-row items-center ml-1">
             <a href="/chat" class="text-white text-xl">STELLA</a>
         </div>
         <div class="flex flex-row items-center"v-if=show_auth >
@@ -20,15 +20,15 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue';
 import { reloadNuxtApp } from "nuxt/app";
-const router = useRouter()
 const myCookie = useCookie('stl_id');
-const show_auth = ref(true)
-const show_profile = ref(false)
-const username = ref<string | null>(null)
+const chatSession = useCookie('stl_session');
+const show_auth = ref(true);
+const show_profile = ref(false);
+const username = ref<string | null>(null);
 const toastContainer = ref<InstanceType<typeof ToastContainer> | null>(null);
-const showManageButton = ref(false)
+const showManageButton = ref(false);
 
 import ToastContainer from "@/components/ToastContainer.vue";
 
@@ -49,27 +49,28 @@ $bus.on("toast", (data) => {
 
 
 if (! myCookie.value){
-    show_auth.value = true
+    show_auth.value = true;
 }else{
     show_auth.value = false;
-    show_profile.value = true
-    const user_data = JSON.parse(myCookie.value)
-    username.value = user_data.username
+    show_profile.value = true;
+    const user_data = JSON.parse(myCookie.value);
+    username.value = user_data.username;
     if (user_data.role == "admin"){
-        showManageButton.value = true
+        showManageButton.value = true;
     }
 }
 
 
 
-const goToLogin = () => { navigateTo("/signIn") }
-const goToSignUp = () => { navigateTo("/signUp") }
+const goToLogin = () => { navigateTo("/signIn"); }
+const goToSignUp = () => { navigateTo("/signUp"); }
 const goTologOut = () => {
-    myCookie.value = null
+    myCookie.value = null;
+    chatSession.value = null;
     reloadNuxtApp({
         path: "/chat",
-        ttl: 1000, // default 10000
+        ttl: 1000
     });
 }
-const goToManage = () => { navigateTo("/admin") }
+const goToManage = () => { navigateTo("/admin"); }
 </script>
