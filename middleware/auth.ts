@@ -3,7 +3,7 @@ import { auth } from "@/composables/apiService";
 export default defineNuxtRouteMiddleware(async (to, from) => {
         const myCookie = useCookie('stl_id');
         const user_auth = myCookie.value ? JSON.parse(myCookie.value) : null;
-        // console.log("COOKIE", user_auth);
+        console.log("COOKIE", user_auth);
             
         
         if (!user_auth){

@@ -46,7 +46,7 @@
             
             <button class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 text-white text-xl bg-orange-700 hover:bg-orange-900" @click="requestSignUp">Sign Up</button>
             <div class="mt-4">
-                <p class="text-neutral-600">Have an account?<a href="/signIn" class="ml-2 text-orange-700">Log In</a></p>
+                <p class="text-neutral-600">Have an account?<a @click="goToLogin" class="ml-2 text-orange-700">Log In</a></p>
             </div>
         </div>
     </div>
@@ -56,74 +56,73 @@
 import { CreateNewUser } from '@/composables/apiService';
 import { ref } from 'vue';
 
-const email = ref("")
-const username = ref("")
-const password = ref("")
-const confirmPassword = ref("")
+const email = ref("");
+const username = ref("");
+const password = ref("");
+const confirmPassword = ref("");
 
-const showPassword = ref<string>("password")
-const showConfirmPassword = ref<string>("password")
+const showPassword = ref<string>("password");
+const showConfirmPassword = ref<string>("password");
 
-const error_input = ref("")
-const succes_input = ref("")
+const error_input = ref("");
+const succes_input = ref("");
 
 const showPasswordIcon = () => {
     if (showPassword.value == "password"){
-        showPassword.value = "text"
+        showPassword.value = "text";
     }else{
-        showPassword.value = "password"
+        showPassword.value = "password";
     }
 }
 
 const showConfirmPasswordIcon = () => {
     if (showConfirmPassword.value == "password"){
-        showConfirmPassword.value = "text"
+        showConfirmPassword.value = "text";
     }else{
-        showConfirmPassword.value = "password"
+        showConfirmPassword.value = "password";
     }
 }
 
 const validateInput = (username:string, password:string, confirmPassword:string, email:string) => {
-  if (username == "" || password == "" ||  confirmPassword == "" || email == ""){
-    error_input.value = "Please Enter Fields";
-    return;
-  }else {
-    const validateEmailRegex:RegExp = /^\S+@\S+\.\S+$/;
-    if (confirmPassword !== password){
-        error_input.value = "Password Not Match";
+    if (username == "" || password == "" ||  confirmPassword == "" || email == ""){
+        error_input.value = "Please Enter Fields";
         return;
-    }
+    }else {
+        const validateEmailRegex:RegExp = /^\S+@\S+\.\S+$/;
+        if (confirmPassword !== password){
+            error_input.value = "Password Not Match";
+            return;
+        }
 
-    if (! validateEmailRegex.test(email)){
-        error_input.value = "Email Format Not Correct";
+        if (! validateEmailRegex.test(email)){
+            error_input.value = "Email Format Not Correct";
+            return;
+        }
+        error_input.value = ""
         return;
     }
-    error_input.value = ""
-    return;
-  }
 }
 
 const requestSignUp = async () => {
-  validateInput(username.value, password.value, confirmPassword.value, email.value);
-  if (error_input.value === "") {
-    try{
-        const res = await CreateNewUser(username.value, password.value, email.value)
-        if (res?.data.status){
-            succes_input.value = res.data.message
-            setTimeout(() => {
-                succes_input.value = ""
-            }, 5000)
-        }else{
-            error_input.value = res?.data.message
+    validateInput(username.value, password.value, confirmPassword.value, email.value);
+    if (error_input.value === "") {
+        try{
+            const res = await CreateNewUser(username.value, password.value, email.value);
+            if (res?.data.status){
+                succes_input.value = res.data.message;
+                setTimeout(() => {
+                    succes_input.value = "";
+                }, 5000)
+            }else{
+                error_input.value = res?.data.message;
+            }
+        }catch (error){
+            console.log(error);   
         }
-    }catch (error){
-        console.log(error);
-        
     }
+}
 
-    // error_input.value = res?.data.message
-    
-
-  }
+const goToLogin = () => {
+    navigateTo("/signIn")
 }
 </script>

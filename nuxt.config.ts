@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   runtimeConfig: {
     public: {
-      typhon_api: process.env.TYPHOON_API,
+      api_front_path: process.env.FRONTEND_API_PATH,
       api_path: process.env.BACKEND_API_PATH,
       api_websocket: process.env.BACKEND_WEB_SOCKET_API_PATH
     }

@@ -1,34 +1,18 @@
 <template>
-  <Header/>
+    <Header/>
     <div class="flex flex-row items-center">
         <div>
-            <HistorySideBar/>
+            <HistorySideBar :chatHistory="chat_history_sidebar" @getMessageHistory="handleDataHistory"/>
         </div>
         
         <div class="flex flex-col w-full justify-center items-center">
     
-            <div id="main_chat" class="flex-grow text-white w-full  p-16 border border-orange-800 rounded-lg overflow-y-auto min-h-0 space-y-4">
+            <div id="main_chat" class="flex-grow text-white w-8/12 p-16 rounded-lg overflow-y-auto min-h-0 space-y-4">
                 <div v-for="(msg, index) in messages" :key="index" :class="msg.isUser ? 'text-right': 'text-left'">
                     <div :class="msg.isUser ? 'bg-orange-600 text-white p-3 rounded-lg inline-block' : 'text-left bg-[#262626] rounded-lg inline-block text-white p-4'">
                         <div v-html="msg.text"></div>
                     </div>
-                    <!-- <p :class="msg.isUser ? 'bg-orange-600 text-white p-3 rounded-lg inline-block': 'text-left bg-[#262626] rounded-lg inline-block text-white p-4'">
-                        {{ msg.text }}
-                    </p> -->
                 </div>
-                <!-- <div class="text-right">
-                    <span class=" bg-orange-600 text-white p-3 rounded-lg inline-block">What is BTS</span>
-                </div>
-                <div class="text-left">
-                    <span class="text-left bg-[#262626] text-white p-3 rounded-lg inline-block">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laboriosam aperiam accusantium amet optio reiciendis debitis praesentium, voluptatem vitae ea nobis eaque. Saepe eaque suscipit eius, nobis animi laudantium quo perferendis!</span>
-                </div>
-                <div class="text-left bg-[#262626] rounded-lg inline-block text-white p-4">
-                    <span>shelo</span>
-                    <span>sdflk</span>
-                    <span class="text-2xl">sljfsdskf</span>
-                </div> -->
-
-                <!-- <pre v-html="response" class="text-white"></pre> -->
             </div>
 
             <div class="flex flex-row border border-[#9b442e] rounded-lg w-96 h-12 bg-[#262626]">
@@ -38,16 +22,116 @@
         </div>
 
     </div>
+    <Footer/>
 </template>
 
 <script setup lang="ts">
-  definePageMeta({
+definePageMeta({
     middleware: ["auth"]
-  })
+})
 import Header from '@/layouts/templates/header.vue';
-import { ref } from 'vue'
+import Footer from '@/layouts/templates/footer.vue';
+import { ref } from 'vue';
 import HistorySideBar from '~/components/HistorySideBar.vue';
+import { userSession } from '@/composables/utils';
+import { getAllChathistoryName } from '@/composables/apiService';
 
+
+const fetchHistory = async () => {
+    const user_store = useCookie('stl_id');
+    const session_store = useCookie('stl_session');
+    console.log(session_store.value);
+    
+
+    const session:string = session_store.value ? session_store.value : "";
+    const user_auth = user_store.value ? JSON.parse(user_store.value) : null;
+    const user_id:string = user_auth ? user_auth.user_id : "guest";
+    const ch = await getAllChathistoryName(user_id, session);
+    if (ch?.data.status){
+        const chat_history = ch.data.message;
+        if (chat_history.type === "guest"){
+            if (chat_history.last_message && chat_history.last_message.length == 0){
+                session_store.value = null;
+            }
+
+            for (let index = 0; index < chat_history.message.length; index++) {
+                const element = chat_history.message[index];
+                messages.value.push(element);
+            }
+        }else if(chat_history.type === "user"){
+            for (let index = 0; index < chat_history.last_message.length; index++) {
+                const element = chat_history.last_message[index];
+                messages.value.push(element);
+            }
+
+            for (let index = 0; index < chat_history.chat_history.length; index++) {
+                const element = chat_history.chat_history[index];
+                chat_history_sidebar.value.push({
+                    "name":element.chat_name.slice(0, 21),
+                    "session_id":element.chat_session,
+                    "create_at": element.create_date
+                })
+            } 
+        }
+    }
+}
+fetchHistory();
+
+
+
+const fetchOnlyUserHistory = async () => {
+    const user_store = useCookie('stl_id');
+    const session_store = useCookie('stl_session');
+    
+
+    const session:string = session_store.value ? session_store.value : "";
+    const user_auth = user_store.value ? JSON.parse(user_store.value) : null;
+    const user_id:string = user_auth ? user_auth.user_id : "guest";
+    const ch = await getAllChathistoryName(user_id, session);
+    chat_history_sidebar.value = [];
+
+    if (ch?.data.status){
+        const chat_history = ch.data.message;
+        if (chat_history.type === "guest"){
+            if (chat_history.last_message && chat_history.last_message.length == 0){
+                session_store.value = null;
+            }
+        }else if(chat_history.type === "user"){
+            for (let index = 0; index < chat_history.chat_history.length; index++) {
+                const element = chat_history.chat_history[index];
+                chat_history_sidebar.value.push({
+                    "name":element.chat_name.slice(0, 21),
+                    "session_id":element.chat_session,
+                    "create_at": element.create_date
+                })
+            } 
+        }
+    }
+}
+
+
+const fetchSession = async () => {
+    const user_store = useCookie('stl_id');
+    const session_store = useCookie('stl_session');
+
+    const session:string = session_store.value ? session_store.value : "";
+    const user_auth = user_store.value ? JSON.parse(user_store.value) : null;
+    const user_id:string = user_auth ? user_auth.user_id : "guest";
+
+    const res = await requestSession(user_id, session);
+    if (res?.data.status){
+        userSession(res.data.message);
+    }    
+}
+
+const handleDataHistory = (data:{"text":string; "isUser":boolean;}[]) => {
+    messages.value = [];
+    for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        messages.value.push(element);
+    }
+    
+}
 
 // useSeoMeta({
 //   title: 'STELLA',
@@ -57,15 +141,10 @@ import HistorySideBar from '~/components/HistorySideBar.vue';
 //   ogImage: 'https://example.com/image.png',
 // })
 
-const response = ref<any | null>(null)
-const modelLlm = ref(null)
-const user_massage = ref('')
-const config = useRuntimeConfig()
-const chat_input = ref<string | null>(null)
-const messages = ref<{ text: string; isUser: boolean }[]>([
-    //   { text: 'Hello! How can I assist you today?', isUser: false },
-    //   {text: '', isUser: true}
-]);
+const chat_history_sidebar = ref<{name:string; session_id:string, create_at:string}[]>([]);
+const config = useRuntimeConfig();
+const chat_input = ref<string | null>(null);
+const messages = ref<{ text: string; isUser: boolean }[]>([]);
 
 function formatStructuredText(input: string) {
     return input
@@ -78,15 +157,19 @@ function formatStructuredText(input: string) {
 
 async function chat(message: string | null) {
     if (message) {
-        messages.value.push({ text: message, isUser: true }); // Push user message
-
+        messages.value.push({ text: message, isUser: true });
         const url = `${config.public.api_path}/chat/`;
 
         try {
+            await fetchSession();
+            const getChatSession = useCookie("stl_session");
+            const session_id:string = getChatSession.value ?? "";
+            
+            
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ data: message, session: "1" }),
+                body: JSON.stringify({ data: message, session: session_id }),
             });
 
             if (!response.body) throw new Error("ReadableStream not supported!");
@@ -94,7 +177,7 @@ async function chat(message: string | null) {
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let result = "";
-            let currentIndex = messages.value.length; // Index of last message
+            let currentIndex = messages.value.length;
 
             const processStream = async () => {
                 messages.value.push({ text: "Thinking...", isUser: false });
@@ -102,12 +185,8 @@ async function chat(message: string | null) {
                     const { done, value } = await reader.read();
                     if (done) break;
                     result += decoder.decode(value, { stream: true });
-
-                    // Update last message instead of pushing a new one
-                    messages.value[currentIndex].text = formatStructuredText(result) + ""; // Cursor effect
+                    messages.value[currentIndex].text = formatStructuredText(result) + "";
                 }
-
-                // Remove cursor after full response is received
                 messages.value[currentIndex].text = formatStructuredText(result);
             };
 
@@ -116,6 +195,7 @@ async function chat(message: string | null) {
             console.error("Fetch error:", error);
             messages.value.push({ text: "Error fetching data.", isUser: false });
         }
+        await fetchOnlyUserHistory();
     }
 }
 

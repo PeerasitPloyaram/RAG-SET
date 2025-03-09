@@ -18,6 +18,25 @@ export const CreateNewUser = async (username:string, password:string, email:stri
     }
 };
 
+export const requestSession = async (user_id:string, session_id:string) => {
+    const config = useRuntimeConfig()
+    try {
+        const response = await axios.post(`${config.public.api_path}/session/`, {
+            user_id: user_id.toString(),
+            current_session: session_id.toString(),
+        }, {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        });
+        // console.log("Response:", response.data);
+        return response
+    } catch (error: any) {
+        console.error("Error sending data:", error.response?.data || error.message);
+    }
+};
+
+
 export const login = async (username:string, password:string) => {
     const config = useRuntimeConfig()
     try {        
@@ -90,6 +109,42 @@ export const getCompanyData = async () => {
         console.error("Error sending data:", error.response?.data || error.message);
     }
 }
+
+export const getAllChathistoryName = async (user_id:string, session_id:string) => {
+    const config = useRuntimeConfig()
+
+    try {        
+        const response = await axios.get(`${config.public.api_path}/session/getHistory/`,
+		{
+            params: {
+                "user_id": user_id,
+                "session_id": session_id
+            },
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        // console.log("Response:", response.data);
+        return response
+    } catch (error: any) {
+        console.error("Error sending data:", error.response?.data || error.message);
+    }
+}
+
+export const dropUserSession = async (id:string, session_id:string) => {
+    const config = useRuntimeConfig()
+    try {        
+        const response = await axios.post(`${config.public.api_path}/session/deleteSession`, {
+            "user_id":String(id),
+            "current_session":session_id
+        });
+        // console.log("Response:", response.data);
+        return response
+    } catch (error: any) {
+        console.error("Error sending data:", error.response?.data || error.message);
+    }
+};
+
 
 export const getCompanyFileData = async (company_name:string) => {
     const config = useRuntimeConfig()

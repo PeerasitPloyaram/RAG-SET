@@ -1,8 +1,17 @@
 export default defineNuxtPlugin((nuxtApp) => {
+    const user_store = useCookie('stl_id');
+    const user_auth = user_store.value ? JSON.parse(user_store.value) : null;
+    const user_id = user_auth ? user_auth.user_id : "guest"
+    console.log("sdfsd", user_id);
+    
     const config = useRuntimeConfig();
     if (!process.client) return;
 
-    const wsUrl = `${config.public.api_websocket}/ws/U1234`;
+    if (user_id == "guest"){
+        return
+    }
+
+    const wsUrl = `${config.public.api_websocket}/ws/${user_id}`;
     const socket = new WebSocket(wsUrl);
   
     socket.onopen = () => {

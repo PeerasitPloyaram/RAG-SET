@@ -318,7 +318,7 @@ const year_input = ref(null)
 
 const error_message_add_company = ref<string | null>(null)
 const success_message_add_company = ref<string | null>(null)
-// const error_message = ref<string | null>(null)
+
 const error_general_message = ref<string | null>(null)
 const error_message_change_description = ref<string | null>(null)
 const success_message_change_description = ref<string | null>(null)
@@ -345,6 +345,9 @@ const textarea_buffer = ref<string | null>(null)
 
 const company_info = ref<string | null>(null)
 
+const user_store = useCookie('stl_id');
+const user_auth = user_store.value ? JSON.parse(user_store.value) : null;
+const user_id:string = user_auth ? user_auth.user_id : "guest"
 
 let company_info_buffer:string|null = null;
 
@@ -367,12 +370,6 @@ const changeType = async (event:any) => {
     if (event.target.value == "company"){
         visible_company_file.value = true
         visible_general_file.value = false
-    //     const response = await getCompanyData()
-    // const company = response?.data.info
-    // for (let index = 0; index < company.length; index++) {
-    //     const element = company[index];
-    //     companies.value.push({"abbr":element.abbr, "name_th":element.name_th, "name_en":element.name_en, "sector":element.sector})
-    // }
     }else if (event.target.value == "general"){
         visible_company_file.value = false
         visible_general_file.value = true
@@ -607,9 +604,6 @@ const uploadGeneralFile = async () => {
     const descripton_file:string | null = general_file_description.value ? general_file_description.value : null;
     
     if (! name_file || !descripton_file || !raw_file.value){ error_general_message.value = "Please Enter Field"; return}
-    // const file_name:string = abbr + "_" + type + "_" + year
-
-    // console.log(raw_file.value);
     
     const formData = new FormData()
     if (!raw_file.value) {
@@ -621,7 +615,7 @@ const uploadGeneralFile = async () => {
     formData.append("description", descripton_file)
 
     try {
-        const response = await axios.post(`${config.public.api_path}/manage/upload/generalFile/U1234`, formData, {});
+        const response = await axios.post(`${config.public.api_path}/manage/upload/generalFile/${user_id}`, formData, {});
             console.log("Response:", response.data);
             if (response.data.status == false){
                 error_general_message.value = response.data.message
@@ -669,8 +663,6 @@ const uploadCompanyFile = async () => {
 
     if (! abbr || !year || !type || !raw_file.value){ error_message_upload_company.value = "Please Enter Field"; return}
     const file_name:string = abbr + "_" + type + "_" + year +".pdf"
-
-    // console.log(raw_file.value);
     
     const formData = new FormData()
     if (!raw_file.value) {
@@ -680,12 +672,10 @@ const uploadCompanyFile = async () => {
     formData.append('file_name',file_name)
     formData.append("type", type)
     formData.append("partition", abbr)
-    // formData.append("year", year)
-    // formData.append("compnay", abbr)
 
 
     try {
-        const response = await axios.post(`${config.public.api_path}/manage/upload/companyFile/U1234`, formData, {});
+        const response = await axios.post(`${config.public.api_path}/manage/upload/companyFile/${user_id}`, formData, {});
             // console.log("Response:", response.data);
             if (response.data.status == false){
                 error_message_upload_company.value = response.data.message

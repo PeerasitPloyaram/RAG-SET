@@ -5,10 +5,8 @@
                 <h1 class="text-white text-2xl">Welcome Back!</h1>
             </div>
             <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 py-2.5 sm:py-3 ps-4 pe-10 bg-[#262626] dark:placeholder-neutral-500 dark:focus:ring-neutral-600 text-white" placeholder="Username" v-model="username"/>
-            <!-- <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" v-model="password"/> -->
         
             <div class="max-w-sm">
-                <!-- <label class="block text-sm mb-2 dark:text-white">Password</label> -->
                 <div class="relative">
                     <input v-model="password" :type=showPassword class="w-60 h-14 py-2.5 sm:py-3 ps-4 pe-10 block border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-[#262626] dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter password">
                     <button @click="showPasswordIcon" type="button" class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden focus:text-orange-600 dark:text-neutral-600 dark:focus:text-orange-500">
@@ -25,7 +23,6 @@
             </div>
 
             <div class="h-10 mt-4">
-                <!-- <p class="text-white">test</p> -->
                 <p class="text-red-500">{{ error_input }}</p>
             </div>
             
@@ -37,50 +34,47 @@
     </div>
 </template>
   
-  <script setup lang="ts">
-  import { login } from '@/composables/apiService';
-  import { ref } from 'vue';
-  import { CookieStorageSetExpire } from '@/composables/utils'
+<script setup lang="ts">
+import { login } from '@/composables/apiService';
+import { ref } from 'vue';
+import { CookieStorageSetExpire } from '@/composables/utils';
 
-  const username = ref("")
-  const password = ref("")
-  const error_input = ref("")
-  const router = useRouter()
-  
-  const showPassword = ref<string>("password")
+const username = ref("");
+const password = ref("");
+const error_input = ref("");
+const showPassword = ref<string>("password");
 
-  const showPasswordIcon = () => {
+const showPasswordIcon = () => {
     if (showPassword.value == "password"){
-        showPassword.value = "text"
+        showPassword.value = "text";
     }else{
-        showPassword.value = "password"
+        showPassword.value = "password";
     }
-  }
+}
   
   
-  const validateInput = (username:string, password:string) => {
+const validateInput = (username:string, password:string) => {
     if (username == "" || password == ""){
-      error_input.value = "Plese Enter Input Field"
+        error_input.value = "Plese Enter Input Field";
     }
     else {
-      return true
+        return true;
     }
-  }
+}
   
-  const requestLogin = async () => {
+const requestLogin = async () => {
     if (validateInput(username.value, password.value)) {
-      const res = await login(username.value, password.value)
-      if (res?.data.status != true){
-        error_input.value = "Username or Password incorrect"
-      }
-      else{
-        const user_id = res.data.user_id
-        CookieStorageSetExpire("stl_id", JSON.stringify({"user_id":user_id, "username":res.data.username, "role":res.data.role}))
-
-        // Read the cookie value
-        error_input.value = ""
-        navigateTo("/chat")
-      }
+        const res = await login(username.value, password.value);
+        if (res?.data.status != true){
+            error_input.value = "Username or Password incorrect";
+        }
+        else{
+            const user_id = res.data.user_id;
+            CookieStorageSetExpire("stl_id", JSON.stringify({"user_id":user_id, "username":res.data.username, "role":res.data.role}));
+            error_input.value = "";
+            await navigateTo("/chat");
+            window.location.reload();
+        }
     }
-  }
-  </script>
+}
+</script>
