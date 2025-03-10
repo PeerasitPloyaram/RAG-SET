@@ -1,10 +1,10 @@
 <template>
-    <div class="sticky top-0 bg-[#0c0c0c] bg-opacity-30 h-16 flex justify-between items-center px-4">
+    <div class="sticky top-0 bg-[#0c0c0c] bg-opacity-30 h-16 flex justify-between items-center px-4 z-50">
         <div class="flex flex-row items-center ml-1">
             <a href="/chat" class="text-white text-xl">STELLA</a>
         </div>
         <div class="flex flex-row items-center"v-if=show_auth >
-            <button class="text-white m-2 bg-orange-700 w-20 h-8 rounded-lg transition-colors" @click="goToLogin">SignIn</button>
+            <button class="text-white m-2 bg-orange-700 hover:bg-orange-900 w-20 h-8 rounded-lg transition-colors" @click="goToLogin">SignIn</button>
             <button class="text-white m-2 bg-[#262626] hover:bg-[#171717] w-20 h-8 rounded-lg transition-colors" @click="goToSignUp">SignUp</button>
         </div>
         <div class="flex flex-row items-center"v-if=show_profile>

@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed top-18 right-5 flex flex-col gap-2 w-full z-50">
+    <div class="fixed top-18 right-5 flex flex-col gap-2 w-full z-40">
         <ToastNotification
             v-for="(toast, index) in toasts"
             :key="toast.id"

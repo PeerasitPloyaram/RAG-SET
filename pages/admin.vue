@@ -69,7 +69,12 @@
                                 </option>
                             </select>
 
-                            <input v-model="year_input" type="text" class="w-35 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2" placeholder="Year: eg. 2023"/>
+                            <select name="chose" id="" class="w-35 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2" @change="getYear($event)">
+                                <option value="" selected disabled>Year</option>
+                                <option v-for="(year) in years" :key="year">
+                                    {{ year }}
+                                </option>
+                            </select>
 
                             <div v-if="visible_company_info" v-for="(c) in company">
                                 <p class="text-white">{{ c }}</p>
@@ -309,6 +314,7 @@ const raw_file = ref(null)
 const fileUrl = ref<string | undefined>(undefined)
 const config = useRuntimeConfig()
 const sectors = ref<{ id: number; name: string; abbr:string;}[]>([])
+const years = ref<string[]>(["2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015"])
 const companies = ref<{ abbr: string; name_th: string; name_en:string; sector:string}[]>([])
 const company = ref<{ abbr: string; name_th: string; name_en:string; sector:string}>()
 const companies_file = ref<{ id: string; name: string; type:string}[]>([])
@@ -387,6 +393,10 @@ const showCompanyInfo = (event:any) => {
         }
         
     }
+}
+
+const getYear = (event:any) => {
+    year_input.value = event.target.value
 }
 
 

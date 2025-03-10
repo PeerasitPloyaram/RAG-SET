@@ -4,13 +4,13 @@
             <div class="m-4">
                 <h1 class="text-white text-2xl">Welcome Back!</h1>
             </div>
-            <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 py-2.5 sm:py-3 ps-4 pe-10 bg-[#262626] dark:placeholder-neutral-500 dark:focus:ring-neutral-600 text-white" placeholder="Username" v-model="username"/>
+            <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 py-2.5 sm:py-3 ps-4 pe-10 bg-[#262626] dark:placeholder-neutral-500 dark:focus:ring-neutral-600 text-white outline-none" placeholder="Username" v-model="username"/>
         
             <div class="max-w-sm">
                 <div class="relative">
-                    <input @keyup.enter="requestLogin" v-model="password" :type=showPassword class="w-60 h-14 py-2.5 sm:py-3 ps-4 pe-10 block border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-[#262626] dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter password">
-                    <button @click="showPasswordIcon" type="button" class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden focus:text-orange-600 dark:text-neutral-600 dark:focus:text-orange-500">
-                    <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <input @keyup.enter="requestLogin" v-model="password" :type=showPassword class="w-60 h-14 py-2.5 sm:py-3 ps-4 pe-10 block border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-[#262626] dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 outline-none" placeholder="Enter password">
+                    <button @click="showPasswordIcon" type="button" class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-hidden dark:text-neutral-600">
+                    <svg class="shrink-0 size-3.5 transition-colors" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :class="iconShowPassword">
                         <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
                         <path class="hs-password-active:hidden" d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
                         <path class="hs-password-active:hidden" d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
@@ -43,12 +43,15 @@ const username = ref("");
 const password = ref("");
 const error_input = ref("");
 const showPassword = ref<string>("password");
+const iconShowPassword = ref<string>("text-gray-500")
 
 const showPasswordIcon = () => {
     if (showPassword.value == "password"){
         showPassword.value = "text";
+        iconShowPassword.value = "text-orange-500"
     }else{
         showPassword.value = "password";
+        iconShowPassword.value = "text-gray-500"
     }
 }
   
@@ -78,3 +81,15 @@ const requestLogin = async () => {
     }
 }
 </script>
+
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: rgb(12,12,12);
+  background: linear-gradient(333deg, rgba(12,12,12,1) 64%, rgba(36,15,0,1) 83%, rgba(65,36,4,1) 93%, rgba(89,53,6,1) 100%, rgba(122,83,12,1) 100%, rgba(161,91,9,1) 100%, rgba(185,97,7,1) 100%, rgba(255,113,0,1) 100%);
+  background-attachment: fixed;
+  background-size: cover;
+}
+</style>

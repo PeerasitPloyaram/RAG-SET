@@ -7,7 +7,7 @@
         
         <div class="flex flex-col w-full justify-center items-center">
     
-            <div id="main_chat" class="flex-grow text-white w-8/12 p-16 rounded-lg overflow-y-auto min-h-0 space-y-4">
+            <div id="main_chat" ref="chatContainer"  class="flex-grow text-white md:w-8/12 p-16 rounded-lg overflow-y-auto min-h-0 space-y-4">
                 <div v-for="(msg, index) in messages" :key="index" :class="msg.isUser ? 'text-right': 'text-left'">
                     <div :class="msg.isUser ? 'bg-orange-600 text-white p-3 rounded-lg inline-block' : 'text-left bg-[#262626] rounded-lg inline-block text-white p-4'">
                         <div v-html="msg.text"></div>
@@ -15,10 +15,20 @@
                 </div>
             </div>
 
-            <div class="flex flex-row border border-[#9b442e] rounded-lg w-96 h-12 bg-[#262626]">
-                <input class="bg-transparent w-full text-white" v-model="chat_input" placeholder="Ask me" v-on:keyup.enter="chat(chat_input)"/>
-                <a @click="chat(chat_input)" style="margin-left: 5px;"  class="bg-[#1B1B20]">enter</a>
+            <!-- Input -->
+            <div class="bg-gradient-to-b from-orange-800 to-[#262626] dark:to-[#171717] flex w-1/2 rounded-2xl">
+                <div class="flex flex-col  rounded-2xl w-full sm:h-12 md:h-28 bg-[#262626] m-0.5">
+                <div class="flex flex-row items-center justify-center">
+                    <input class="bg-transparent w-full text-white p-4 h-full text-xl outline-none"
+                    v-model="chat_input" placeholder="How can I help you?" v-on:keyup.enter="chat(chat_input)"/>
+
+                    <a @click="chat(chat_input)" class="bg-[#373737] hover:bg-[#191919] transition-colors m-2 h-12 w-12 rounded-full justify-center items-center flex cursor-pointer">
+                        <i class="fa-duotone fa-solid fa-wand-sparkles fa-lg text-neutral-400 hover:text-orange-300 transition-colors"></i>
+                    </a>
+                </div>
             </div>
+            </div>
+
         </div>
 
     </div>
@@ -189,7 +199,8 @@ async function chat(message: string | null) {
                 }
                 messages.value[currentIndex].text = formatStructuredText(result);
             };
-
+            chat_input.value = ""
+            
             await processStream();
         } catch (error) {
             console.error("Fetch error:", error);
