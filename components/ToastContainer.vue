@@ -1,10 +1,11 @@
 <template>
-    <div class="fixed top-6 right-8 flex flex-col gap-2 w-full">
+    <div class="fixed top-18 right-5 flex flex-col gap-2 w-full z-50">
         <ToastNotification
             v-for="(toast, index) in toasts"
             :key="toast.id"
             :title="toast.title"
             :message="toast.message"
+            :type="toast.type"
             :style="{ top: `${index * 120}px` }" 
             @close="removeToast(toast.id)"/>
     </div>
@@ -14,10 +15,10 @@
 import { ref } from "vue";
 import ToastNotification from "~/components/ToastNotification.vue";
 
-const toasts = ref<{ id: number; title: string; message: string }[]>([]);
-const addToast = (title: string, message: string) => {
+const toasts = ref<{ id: number; title: string; message: string; type:string }[]>([]);
+const addToast = (title: string, message: string, type: string) => {
     const id = Date.now();
-    toasts.value.push({ id, title, message });
+    toasts.value.push({ id, title, message, type });
     setTimeout(() => {
         removeToast(id);
     }, 10000);

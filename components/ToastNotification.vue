@@ -1,84 +1,108 @@
 <template>
-    <div v-if="isActive" class="absolute top-6 right-8 rounded-lg bg-white p-5 shadow-lg overflow-hidden transition-all duration-500 ease-out">
-      <div class="toast-content flex items-center">
-        <!-- Icon -->
-        <i class="fas fa-solid fa-check check bg-blue-600 text-white text-lg rounded-full flex items-center justify-center h-9 w-9"></i>
-        
-        <!-- Message content -->
-        <div class="message ml-5 flex flex-col">
-          <span class="text text-1 font-semibold text-gray-800">{{ title }}</span>
-          <span class="text text-2 text-sm font-normal text-gray-500">{{ message }}</span>
+    <div v-if="isActive" class="absolute top-6 right-8 rounded-lg p-5 shadow-lg overflow-hidden transition-all duration-500 ease-out" :class="setBackground">
+        <div class="toast-content flex items-center">
+            <!-- Icon -->
+            <div class="text-white text-lg rounded-full flex items-center justify-center h-9 w-9" :class="setIconBackground">
+                <i :class=iconToast></i>
+            </div>
+            
+            <!-- Message content -->
+            <div class="message ml-5 flex flex-col">
+                <span class="text text-1 font-semibold text-neutral-800">{{ title }}</span>
+                <span class="text text-2 text-sm font-normal text-white">{{ message }}</span>
+            </div>
         </div>
-      </div>
       
-      <!-- Close button -->
-      <i class="fa-solid fa-xmark close absolute top-3 right-4 p-1 cursor-pointer opacity-70 hover:opacity-100" @click="closeToast"></i>
+        <!-- Close button -->
+        <i class="fa-solid fa-xmark close absolute top-1 right-1 p-1 cursor-pointer opacity-70 transition-all hover:opacity-100" @click="closeToast"></i>
       
-      <!-- Progress bar -->
-      <div v-if="isProgressActive" class="progress absolute bottom-0 left-0 h-1 w-full bg-blue-600 transition-opacity duration-500"></div>
+        <!-- Progress bar -->
+        <div v-if="isProgressActive" class="absolute bottom-0 left-0 h-1 transition-colors rounded-lg duration-500" :class="setProgressBarBackground"
+        :style="{ width: progressWidth + '%' }">
+        </div>
     </div>
-  </template>
+</template>
   
-  <script setup lang="ts">
-  import { ref } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
   
-  // Props for title and message
-  const props = defineProps({
+
+const props = defineProps({
     title: {
-      type: String,
-      required: true
+        type: String,
+        required: true
     },
     message: {
-      type: String,
-      required: true
+        type: String,
+        required: true
+    },
+    type:{
+        type: String,
+        required: true
     }
-  });
+});
+
   
-  // Reactive state for showing and hiding the toast
-  const isActive = ref(false);
-  const isProgressActive = ref(false);
+
+const isActive = ref(false);
+const isProgressActive = ref(false);
+const progressWidth = ref(0)
+const iconToast = ref<string>("fas fa-solid fa-check check")
+const setBackground = ref<string>("bg-[#799f73]")
+const setIconBackground = ref<string>("bg-green-600")
+const setProgressBarBackground = ref<string>("bg-green-600")
+
+let timer1: NodeJS.Timeout | null = null;
+let timer2: NodeJS.Timeout | null = null;
+
+if (props.type == "error"){
+    iconToast.value = "fa-solid fa-x"
+    setIconBackground.value = "bg-red-500"
+    setProgressBarBackground.value = "bg-red-500"
+    setBackground.value = "bg-[#ec8065]"
+}
   
-  // Timer variables for handling the toast display
-  let timer1: NodeJS.Timeout | null = null;
-  let timer2: NodeJS.Timeout | null = null;
-  
-  // Method to show the toast
-  const showToast = () => {
+
+const showToast = () => {
     isActive.value = true;
     isProgressActive.value = true;
   
-    timer1 = setTimeout(() => {
-      isActive.value = false;
-    }, 5000);
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 2;
+        progressWidth.value = progress;
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                isActive.value = false
+                isProgressActive.value = false;
+                progressWidth.value = 0;
+            }, 500);
+        }
+    }, 200);
+};
   
-    timer2 = setTimeout(() => {
-      isProgressActive.value = false;
-    }, 5300);
-  };
-  
-  // Method to close the toast manually
-  const closeToast = () => {
+const closeToast = () => {
     isActive.value = false;
     isProgressActive.value = false;
-  
+
     if (timer1) clearTimeout(timer1);
     if (timer2) clearTimeout(timer2);
-  };
+};
   
-  // Automatically show the toast when the component is mounted
-  onMounted(() => {
+
+onMounted(() => {
     showToast();
-  });
-  </script>
-  
-  <style scoped>
-  .toast {
-    /* Optional styling */
+});
+</script>
+
+<style scoped>
+.toast {
     transition: transform 0.5s ease-out;
-  }
-  
-  .progress {
+}
+
+.progress {
     transition: opacity 0.5s ease-out;
-  }
-  </style>
+}
+</style>
   

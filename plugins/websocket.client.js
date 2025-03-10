@@ -20,9 +20,12 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     socket.onmessage = (event) => {
         console.log("Contact: Notification from Server");
+        const notification_contact = JSON.parse(event.data);
+        
         nuxtApp.$bus.emit("toast", {
-            title: "New Notification",
-            message: event.data,
+            title: notification_contact.title,
+            message: notification_contact.message,
+            type: notification_contact.type
         });
     };
 

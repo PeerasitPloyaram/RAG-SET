@@ -40,9 +40,8 @@ if (!$bus) {
 }
 
 $bus.on("toast", (data) => {
-    console.log(data);
     if (toastContainer.value) {
-        toastContainer.value.addToast(data.title, data.message);
+        toastContainer.value.addToast(data.title, data.message, data.type);
     }
 });
 
