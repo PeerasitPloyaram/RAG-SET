@@ -4,13 +4,18 @@
             <a href="/chat" class="text-white text-xl">STELLA</a>
         </div>
         <div class="flex flex-row items-center"v-if=show_auth >
-            <button class="text-white m-2 bg-orange-700 hover:bg-orange-900 w-20 h-8 rounded-lg transition-colors" @click="goToLogin">SignIn</button>
-            <button class="text-white m-2 bg-[#262626] hover:bg-[#171717] w-20 h-8 rounded-lg transition-colors" @click="goToSignUp">SignUp</button>
+            <button class="text-white hover:text-neutral-200 font-medium m-2 bg-orange-700 hover:bg-orange-900 w-20 h-8 rounded-lg transition-colors" @click="goToLogin">SignIn</button>
+            <button class="text-white hover:text-neutral-200 font-medium m-2 bg-[#262626] hover:bg-[#171717] w-20 h-8 rounded-lg transition-colors" @click="goToSignUp">SignUp</button>
         </div>
         <div class="flex flex-row items-center"v-if=show_profile>
-            <p class="text-white ml-4 mr-4 text-xl">{{ username }}</p>
-            <button class="text-white m-2 bg-orange-700 hover:bg-orange-900 w-20 h-8 rounded-lg transition-colors" @click="goToManage" v-if="showManageButton">Manage</button>
-            <button class="text-white m-2 bg-[#262626] hover:bg-[#171717] w-20 h-8 rounded-lg transition-colors" @click="goTologOut">LogOut</button>
+            <div class="flex flex-row justify-center items-center">
+                <div class="flex bg-[#262626] w-10 h-10 justify-center items-center rounded-full">
+                    <i class="fa-solid fa-user fa-xl text-neutral-300"></i>
+                </div>
+                <p class="text-neutral-300 ml-2 mr-4 text-xl font-semibold">{{ username }}</p>
+            </div>
+            <button class="text-white hover:text-neutral-200 font-medium m-2 bg-orange-700 hover:bg-orange-900 w-20 h-8 rounded-lg transition-colors" @click="goToManage" v-if="showManageButton">Manage</button>
+            <button class="text-white hover:text-neutral-200 font-medium m-2 bg-[#262626] hover:bg-[#171717] w-20 h-8 rounded-lg transition-colors" @click="goTologOut">LogOut</button>
         </div>
     </div>
     <div class="flex flex-grow">

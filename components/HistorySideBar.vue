@@ -21,7 +21,7 @@
 				:class="{'translate-x-0': show_sidebar, '-translate-x-full': !show_sidebar}"
 				style="height: 32rem; top: 11rem;" v-if="show_sidebar">
 				<div class="mt-4 flex flex-row w-full px-3 items-center text-end">
-					<h1 class="text-white mr-4 text-end w-full">Chat History</h1>
+					<h1 class="text-white mr-4 text-end w-full font-semibold">Chat History</h1>
 				</div>
 
 				<div class="w-full h-0.5 bg-[#3c3c3c] my-4"></div>
@@ -58,9 +58,10 @@ import { onClickOutside } from '@vueuse/core';
 import { userSession } from '@/composables/utils'
 import { dropUserSession } from '@/composables/apiService';
 
-const props = defineProps<{ chatHistory: string[] }>();
+const props = defineProps<{
+	chatHistory: {name:string; session_id:string, create_at:string}[]
+}>();
 const emit = defineEmits(['getMessageHistory']);
-import dayjs from 'dayjs';
 
 const myCookie = useCookie('stl_id');
 const show_sidebar = ref(false);
@@ -69,7 +70,7 @@ const show_new_session = ref(false)
 const popupOpen = ref<string | null>(null);
 const popupMenu = ref<HTMLElement | null>(null);
 const popupStyles = ref<any>({});
-const iconShowing = ref<string>('<i class="fa-sharp-duotone fa-solid fa-eye"></i>');
+const iconShowing = ref<string>('<i class="fa-sharp-duotone fa-solid fa-eye fa-lg text-neutral-300"></i>');
 
 const togglePopup = (sessionId: string, event: MouseEvent) => {
 	popupOpen.value = popupOpen.value === sessionId ? null : sessionId;
@@ -124,10 +125,10 @@ onClickOutside(popupMenu, () => {
 const showSidebarButton = () => {
 	if (show_sidebar.value){
 		show_sidebar.value = false;
-		iconShowing.value = '<i class="fa-duotone fa-solid fa-eye-slash"></i>';
+		iconShowing.value = '<i class="fa-duotone fa-solid fa-eye-slash fa-lg text-orange-300"></i>';
 	}else{
 		show_sidebar.value = true;
-		iconShowing.value = '<i class="fa-sharp-duotone fa-solid fa-eye"></i>';
+		iconShowing.value = '<i class="fa-sharp-duotone fa-solid fa-eye fa-lg text-neutral-300"></i>';
 	}
 }
 

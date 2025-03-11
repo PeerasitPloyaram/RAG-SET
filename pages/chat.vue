@@ -9,7 +9,7 @@
     
             <div id="main_chat" ref="chatContainer"  class="flex-grow text-white md:w-8/12 p-16 rounded-lg overflow-y-auto min-h-0 space-y-4">
                 <div v-for="(msg, index) in messages" :key="index" :class="msg.isUser ? 'text-right': 'text-left'">
-                    <div :class="msg.isUser ? 'bg-orange-600 text-white p-3 rounded-lg inline-block' : 'text-left bg-[#262626] rounded-lg inline-block text-white p-4'">
+                    <div :class="msg.isUser ? 'bg-orange-700 text-white p-3 rounded-xl inline-block' : 'text-left bg-[#262626] rounded-xl inline-block text-white p-4'">
                         <div v-html="msg.text"></div>
                     </div>
                 </div>
@@ -45,6 +45,14 @@ import { ref } from 'vue';
 import HistorySideBar from '~/components/HistorySideBar.vue';
 import { userSession } from '@/composables/utils';
 import { getAllChathistoryName } from '@/composables/apiService';
+
+useSeoMeta({
+    title: 'STELLA',
+    ogTitle: 'STELLA',
+    description: '',
+    ogDescription: '',
+    ogImage: '',
+})
 
 
 const fetchHistory = async () => {
@@ -143,14 +151,6 @@ const handleDataHistory = (data:{"text":string; "isUser":boolean;}[]) => {
     
 }
 
-// useSeoMeta({
-//   title: 'STELLA',
-//   ogTitle: 'STELLA',
-//   description: '',
-//   ogDescription: '',
-//   ogImage: 'https://example.com/image.png',
-// })
-
 const chat_history_sidebar = ref<{name:string; session_id:string, create_at:string}[]>([]);
 const config = useRuntimeConfig();
 const chat_input = ref<string | null>(null);
@@ -214,12 +214,12 @@ async function chat(message: string | null) {
 
 <style>
 html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background: rgb(12,12,12);
-  background: linear-gradient(333deg, rgba(12,12,12,1) 64%, rgba(36,15,0,1) 83%, rgba(65,36,4,1) 93%, rgba(89,53,6,1) 100%, rgba(122,83,12,1) 100%, rgba(161,91,9,1) 100%, rgba(185,97,7,1) 100%, rgba(255,113,0,1) 100%);
-  background-attachment: fixed;
-  background-size: cover;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: rgb(12,12,12);
+    background: linear-gradient(333deg, rgba(12,12,12,1) 64%, rgba(36,15,0,1) 83%, rgba(65,36,4,1) 93%, rgba(89,53,6,1) 100%, rgba(122,83,12,1) 100%, rgba(161,91,9,1) 100%, rgba(185,97,7,1) 100%, rgba(255,113,0,1) 100%);
+    background-attachment: fixed;
+    background-size: cover;
 }
 </style>

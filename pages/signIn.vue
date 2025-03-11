@@ -45,6 +45,14 @@ const error_input = ref("");
 const showPassword = ref<string>("password");
 const iconShowPassword = ref<string>("text-gray-500")
 
+useSeoMeta({
+    title: 'STELLA/Login',
+    ogTitle: 'STELLA/Login',
+    description: '',
+    ogDescription: '',
+    ogImage: '',
+})
+
 const showPasswordIcon = () => {
     if (showPassword.value == "password"){
         showPassword.value = "text";
@@ -84,12 +92,12 @@ const requestLogin = async () => {
 
 <style>
 html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background: rgb(12,12,12);
-  background: linear-gradient(333deg, rgba(12,12,12,1) 64%, rgba(36,15,0,1) 83%, rgba(65,36,4,1) 93%, rgba(89,53,6,1) 100%, rgba(122,83,12,1) 100%, rgba(161,91,9,1) 100%, rgba(185,97,7,1) 100%, rgba(255,113,0,1) 100%);
-  background-attachment: fixed;
-  background-size: cover;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: rgb(12,12,12);
+    background: linear-gradient(333deg, rgba(12,12,12,1) 64%, rgba(36,15,0,1) 83%, rgba(65,36,4,1) 93%, rgba(89,53,6,1) 100%, rgba(122,83,12,1) 100%, rgba(161,91,9,1) 100%, rgba(185,97,7,1) 100%, rgba(255,113,0,1) 100%);
+    background-attachment: fixed;
+    background-size: cover;
 }
 </style>

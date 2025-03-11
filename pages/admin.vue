@@ -266,21 +266,6 @@
             </div>
         </div>
     </div>
-  
-  
-  
-    
-    <!-- <div class="p-6 max-w-lg mx-auto">
-      <h2 class="text-xl font-bold mb-4">Upload and View PDF</h2>
-  
-      <input type="file" @change="handleFileUpload" accept="application/pdf" class="mb-4" />
-  
-      <div v-if="fileUrl" class="mt-4">
-        <h3 class="text-lg font-semibold mb-2">Preview:</h3>
-        <iframe :src="fileUrl" class="w-full h-96 border rounded-md"></iframe>
-        <button @click="uploadFileButton">Upload</button>
-      </div>
-    </div> -->
   </template>
   
 
@@ -290,17 +275,24 @@ definePageMeta({
 })
 
 import {
-getInfo, getCompanyData, getAllSectors,
-createNewCompany,getAllGeneralFile, updateDescription,
-deleteGeneralFile, deleteCompany, getCompanyFileData,
-requestDeleteEachCompanyFile
+    getCompanyData, getAllSectors,
+    createNewCompany,getAllGeneralFile, updateDescription,
+    deleteGeneralFile, deleteCompany, getCompanyFileData,
+    requestDeleteEachCompanyFile
 } from "@/composables/apiService"
 
 
 import { ref } from 'vue'
 import Header from '@/layouts/templates/header.vue';
 import axios from 'axios'
-import { data } from "autoprefixer";
+
+useSeoMeta({
+    title: 'STELLA/Manage',
+    ogTitle: 'STELLA/Manage',
+    description: '',
+    ogDescription: '',
+    ogImage: '',
+})
 
 const visible_company_file = ref(false)
 const visible_general_file = ref(false)
