@@ -11,7 +11,6 @@ export const CreateNewUser = async (username:string, password:string, email:stri
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -29,7 +28,6 @@ export const requestSession = async (user_id:string, session_id:string) => {
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -49,7 +47,6 @@ export const login = async (username:string, password:string) => {
             "Content-Type": "application/json",
           }
         });
-        console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -68,7 +65,6 @@ export const auth = async (id:string) => {
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -85,7 +81,6 @@ export const getInfo = async () => {
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -103,7 +98,6 @@ export const getCompanyData = async () => {
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -124,7 +118,6 @@ export const getAllChathistoryName = async (user_id:string, session_id:string) =
                 "Content-Type": "application/json",
             }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -138,7 +131,6 @@ export const dropUserSession = async (id:string, session_id:string) => {
             "user_id":String(id),
             "current_session":session_id
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -172,7 +164,6 @@ export const getAllGeneralFile = async () => {
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -189,7 +180,6 @@ export const getAllSectors = async () => {
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -212,7 +202,6 @@ export const createNewCompany = async (abbr:string, name_th:string, name_en:stri
             "Content-Type": "application/json",
           }
         });
-        console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -233,7 +222,6 @@ export const updateDescription = async (name:string, description:string) => {
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -253,7 +241,6 @@ export const deleteGeneralFile = async (name:string) => {
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -272,7 +259,6 @@ export const deleteCompany = async (name:string) => {
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
@@ -293,7 +279,6 @@ export const requestDeleteEachCompanyFile = async (file_name:string, abbr:string
             "Content-Type": "application/json",
           }
         });
-        // console.log("Response:", response.data);
         return response
     } catch (error: any) {
         console.error("Error sending data:", error.response?.data || error.message);
