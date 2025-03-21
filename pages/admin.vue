@@ -85,18 +85,18 @@
                             <div v-if="visible_company_info" class="mt-4 mb-2">
                                 <p class="text-white ml-2 mb-2 text-xl font-semibold">Info</p>
                                 <div class="flex flex-col border border-[#373737] bg-[#262626] rounded-xl">
-                                    <p class="text-neutral-400 flex bg-[#262626] p-2 rounded-lg">Name:
+                                    <span class="text-neutral-400 flex bg-[#262626] p-2 rounded-lg">Name:
                                         <p class="text-white ml-2"><span></span> {{ company?.abbr.toUpperCase() }}</p>
-                                    </p>
-                                    <p class="text-neutral-400 flex bg-[#171717] p-2">Name in Thai:
+                                    </span>
+                                    <span class="text-neutral-400 flex bg-[#171717] p-2">Name in Thai:
                                         <p class="text-white ml-2">{{ company?.name_th }}</p>
-                                    </p>
-                                    <p class="text-neutral-400 flex bg-[#262626] p-2">Name in English:
+                                    </span>
+                                    <span class="text-neutral-400 flex bg-[#262626] p-2">Name in English:
                                         <p class="text-white ml-2">{{ company?.name_en }}</p>
-                                    </p>
-                                    <p class="text-neutral-400 flex bg-[#171717] p-2">Sector:
+                                    </span>
+                                    <span class="text-neutral-400 flex bg-[#171717] p-2">Sector:
                                         <p class="text-white ml-2">{{ company?.sector }}</p>
-                                    </p>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -675,7 +675,7 @@ const deleteEachCompanyFile = async (file:any) =>{
             error_comapny_info.value = null
             await getGeneralFileDataInfo(company_name)
         }else{
-            error_comapny_info.value = response.data.message
+            error_comapny_info.value = response?.data?.message
             success_company_info.value = null
         }
     }catch(err){
@@ -727,6 +727,9 @@ const getGeneralFileDataInfo = async (company:any) => {
     try {
         const response = await getCompanyFileData(company);
         if (response?.data.status) {
+            // sort by file name
+            response.data.info.sort((a:any, b:any) => a.file_name.localeCompare(b.file_name));
+            
             companies_file.value = response.data.info.map((element: any) => ({
                 id: element.id,
                 name: element.file_name,
