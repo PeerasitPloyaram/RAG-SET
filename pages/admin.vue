@@ -200,7 +200,7 @@
                                             {{ company.sector }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            <button class="font-medium text-blue-600 dark:text-blue-500 hover:underline" @click="getGeneralFileDataInfo(company)">Info</button>
+                                            <button class="font-medium text-blue-600 dark:text-blue-500 hover:underline" @click="getGeneralFileDataInfo(company.abbr)">Info</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -415,7 +415,8 @@ const render_company_data = () => {
     success_message_change_description.value = ""
     visible_general_data.value = false
     visible_company_data.value = true
-
+    success_company_info.value = null
+    error_comapny_info.value = null
     visible_change_general_file_data.value = false
 }
 
@@ -672,12 +673,13 @@ const deleteEachCompanyFile = async (file:any) =>{
         if (response?.data.status){
             success_company_info.value = response.data.message
             error_comapny_info.value = null
+            await getGeneralFileDataInfo(company_name)
         }else{
             error_comapny_info.value = response.data.message
             success_company_info.value = null
         }
-    }catch{
-
+    }catch(err){
+        console.log(err);
     }
         
 }
@@ -723,7 +725,7 @@ const uploadGeneralFile = async () => {
 
 const getGeneralFileDataInfo = async (company:any) => {
     try {
-        const response = await getCompanyFileData(company.abbr);
+        const response = await getCompanyFileData(company);
         if (response?.data.status) {
             companies_file.value = response.data.info.map((element: any) => ({
                 id: element.id,
@@ -731,8 +733,8 @@ const getGeneralFileDataInfo = async (company:any) => {
                 type: element.file_type
             }));
         }
-        company_info.value = company.abbr.toUpperCase();
-        company_info_buffer = company.abbr.toLowerCase();
+        company_info.value = company.toUpperCase();
+        company_info_buffer = company.toLowerCase();
         visible_company_data_info.value = true;
     } catch (error) {
         console.error("Error fetching company file data:", error);
