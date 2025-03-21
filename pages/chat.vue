@@ -55,10 +55,10 @@ useSeoMeta({
 })
 
 
+const chat_history_sidebar = ref<{name:string; session_id:string, create_at:string}[]>([]);
 const fetchHistory = async () => {
     const user_store = useCookie('stl_id');
     const session_store = useCookie('stl_session');
-    console.log(session_store.value);
     
 
     const session:string = session_store.value ? session_store.value : "";
@@ -74,26 +74,44 @@ const fetchHistory = async () => {
 
             for (let index = 0; index < chat_history.message.length; index++) {
                 const element = chat_history.message[index];
-                messages.value.push(element);
+                if (!element.isUser){
+                    element.text = formatStructuredText(element.text);
+                    messages.value.push(element);
+                }else{
+                    messages.value.push(element);
+                }
             }
         }else if(chat_history.type === "user"){
             for (let index = 0; index < chat_history.last_message.length; index++) {
-                const element = chat_history.last_message[index];
-                messages.value.push(element);
+                const element = chat_history.last_message[index];                
+                if (!element.isUser){
+                    element.text = formatStructuredText(element.text);
+                    messages.value.push(element);
+                }else{
+                    messages.value.push(element);
+                }
             }
+            
+            const sortedChatHistory = chat_history.chat_history.sort((a:any, b:any) => 
+                new Date(b.create_date).getTime() - new Date(a.create_date).getTime()
+            );
 
-            for (let index = 0; index < chat_history.chat_history.length; index++) {
-                const element = chat_history.chat_history[index];
-                chat_history_sidebar.value.push({
-                    "name":element.chat_name.slice(0, 21),
+            for (let index = 0; index < sortedChatHistory.length; index++) {
+                const element = sortedChatHistory[index];
+                const ch_name = element;
+                const c:string = ch_name.chat_name;
+                if (c) {
+                    chat_history_sidebar.value.push({
+                    "name": c.slice(0, 19),
                     "session_id":element.chat_session,
                     "create_at": element.create_date
-                })
-            } 
+                    })
+
+                }
+            }            
         }
     }
 }
-fetchHistory();
 
 
 
@@ -115,13 +133,21 @@ const fetchOnlyUserHistory = async () => {
                 session_store.value = null;
             }
         }else if(chat_history.type === "user"){
-            for (let index = 0; index < chat_history.chat_history.length; index++) {
-                const element = chat_history.chat_history[index];
-                chat_history_sidebar.value.push({
-                    "name":element.chat_name.slice(0, 21),
+            const sortedChatHistory = chat_history.chat_history.sort((a:any, b:any) => 
+                new Date(b.create_date).getTime() - new Date(a.create_date).getTime()
+            );
+
+            for (let index = 0; index < sortedChatHistory.length; index++) {
+                const element = sortedChatHistory[index];
+                const ch_name = element
+                const c:string = ch_name.chat_name;
+                if (c) {
+                    chat_history_sidebar.value.push({
+                    "name": c.slice(0, 19),
                     "session_id":element.chat_session,
                     "create_at": element.create_date
-                })
+                    })
+                }
             } 
         }
     }
@@ -146,24 +172,57 @@ const handleDataHistory = (data:{"text":string; "isUser":boolean;}[]) => {
     messages.value = [];
     for (let index = 0; index < data.length; index++) {
         const element = data[index];
-        messages.value.push(element);
+        if (!element.isUser){
+            element.text = formatStructuredText(element.text);
+            messages.value.push(element);
+        }else{
+            messages.value.push(element);
+        }   
     }
-    
 }
 
-const chat_history_sidebar = ref<{name:string; session_id:string, create_at:string}[]>([]);
 const config = useRuntimeConfig();
 const chat_input = ref<string | null>(null);
 const messages = ref<{ text: string; isUser: boolean }[]>([]);
 
-function formatStructuredText(input: string) {
-    return input
-        .replace(/### (.*?)\n/g, '<h2 class="text-xl font-bold mt-4">$1</h2>') // H2 Section Headers
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>') // Bold Text
-        .replace(/\n- (.*?)\n/g, '<li class="ml-4">$1</li>') // Bullet List Items
-        .replace(/\n/g, '<br>'); // Preserve line breaks
+function formatStructuredText(input:string) {
+    // Header h1, h2
+    input = input.replace(/#### (.*?)\n/g, '<h1 class="text-xl font-bold mt-10 mb-4">$1</h1>');
+    input = input.replace(/### (.*?)\n/g, '<h2 class="text-xl font-bold mt-10 mb-4">$1</h2>');
+
+    // Convert bold text (**bold**) to <strong>
+    input = input.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>');
+
+    // Fix unordered lists (- item)
+    input = input.replace(/^\s*-\s+(.*?)(?=\n|$)/gm, '<li class="ml-4 mt-2 mb-4">$1</li>');
+    input = input.replace(/(<li class="ml-4">.*<\/li>)+/g, '<ul class="mt-2">$&</ul>'); // Wrap in <ul>
+
+    input = input.replace(/<\/h1>\s*- /g, '</h1>\n<ul class=""><li class="">'); 
+    input = input.replace(/<\/li>(?!\s*<li)/g, '</li></ul>');
+
+    // Tables
+    const pattern = /^(-+\|)+-+$/;
+    input = input.replace(/\|(.+?)\|\n/g, (match, content) => {
+        const rows = content.trim().split("\n");
+        const tableRows = rows.map((row:string) => {
+            if (!pattern.test(row)){
+                // row = row.replace(/\s+/g, "");
+                const columns = row.split("|").map(col => `<td class="border border-[#373737] w-80 p-2 text-neutral-300">${col.trim()}</td>`).join("");
+                return `<tr class="max-w-80">${columns}</tr>`;
+            }
+        }).join("");
+        return `<table class="w-fit border-collapse bg-[#171717]">${tableRows}</table>`;
+    });
+
+    input = input.replace(/(?:^|\n)([^<>\n]+)(?:\n|$)/g, (match, text) => {
+        if (text.trim().startsWith("<")) return match;
+        return `\n<p class="mt-2 mb-2">${text.trim()}</p>\n`;
+    });
+
+    return `<div class="text-neutral-200">${input}</div>`;
 }
 
+fetchHistory();
 
 async function chat(message: string | null) {
     if (message) {
@@ -190,21 +249,27 @@ async function chat(message: string | null) {
             let currentIndex = messages.value.length;
 
             const processStream = async () => {
-                messages.value.push({ text: "Thinking...", isUser: false });
+                messages.value.push({ text: 'Analyzing and Retrieving Data <i class="ml-2 text-neutral-300 fa-solid fa-hourglass-start animate-spin"></i>', isUser: false });
+                let flag = true
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
-                    result += decoder.decode(value, { stream: true });
-                    messages.value[currentIndex].text = formatStructuredText(result) + "";
+                    if (flag){
+                        messages.value[currentIndex].text = 'Evaluating and Generating Results <i class="ml-2 fa-solid fa-pen-fancy animate-pulse"></i>';
+                        flag = false
+                    }else{
+                        result += decoder.decode(value, { stream: true });
+                        messages.value[currentIndex].text = formatStructuredText(result) + "";
+                    }
                 }
                 messages.value[currentIndex].text = formatStructuredText(result);
             };
-            chat_input.value = ""
+            chat_input.value = "";
             
             await processStream();
         } catch (error) {
             console.error("Fetch error:", error);
-            messages.value.push({ text: "Error fetching data.", isUser: false });
+            messages.value.push({ text: "Sorry i cannot generate this question right now.", isUser: false });
         }
         await fetchOnlyUserHistory();
     }

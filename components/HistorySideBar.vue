@@ -11,10 +11,7 @@
 
 		<!-- new chat -->
 		<div class="fixed flex flex-row items-center justify-start top-32 left-3 transition-all duration-300" v-if="show_new_session"
-		:class="{'translate-x-0': show_sidebar, '-translate-x-7': !show_sidebar}">
-			<button class="bg-[#262626] w-12 h-12 rounded-lg ml-4 mt-2" @click="newSession">
-				<i class="fa-duotone fa-solid fa-note-sticky text-neutral-400 fa-2x hover:text-neutral-600 transition-colors"></i>
-			</button>
+			:class="{'translate-x-0': show_sidebar, '-translate-x-7': !show_sidebar}">
 		</div>
 		
 			<div class="flex flex-col bg-[#262626] border border-[#3c3c3c] w-56 m-4 rounded-lg items-center fixed transition-all duration-300"
@@ -29,10 +26,11 @@
 				<!-- Chat history list with scrolling -->
 				<div class="flex flex-col w-full px-3 space-y-2 text-white  h-96" style="max-height: 40rem;">
 					<div class="flex flex-col overflow-auto">
-						<button class="bg-[#171717] hover:bg-[#101010] rounded-lg pt-3 pb-3 mt-2 mb-2 flex flex-row justify-between items-centers transition-colors pl-2" @click="getSession(chat, $event)" v-for="(chat) in chatHistory" :key="chat.session_id">
+						<button class="group bg-[#171717] hover:bg-[#101010] rounded-lg pt-3 pb-3 mt-2 mb-2 flex flex-row justify-between items-centers transition-colors pl-2"
+							:class="{ 'bg-orange-800 text-neutral-200': selectedSession === chat.session_id, 'hover:bg-orange-900 ': selectedSession === chat.session_id}" @click="getSession(chat, $event)" v-for="(chat) in chatHistory" :key="chat.session_id">
 							{{ chat.name }}
-							<span class="w-5 h-5 text-neutral-500 hover:text-white cursor-pointer mr-2 transition-colors" @click.stop="togglePopup(chat.session_id, $event)">
-								<i class="fa-solid fa-ellipsis"></i>
+							<span class="w-5 h-5 text-neutral-500 hover:text-white cursor-pointer mr-2 transition-colors"@click.stop="togglePopup(chat.session_id, $event)">
+								<i class="fa-solid fa-ellipsis" :class="{'text-neutral-400 group-hover:text-neutral-300': selectedSession === chat.session_id}"></i>
 							</span>
 						</button>
 					</div>
@@ -59,18 +57,19 @@ import { userSession } from '@/composables/utils'
 import { dropUserSession } from '@/composables/apiService';
 
 const props = defineProps<{
-	chatHistory: {name:string; session_id:string, create_at:string}[]
+	chatHistory: {name: string; session_id: string; create_at: string}[]
 }>();
 const emit = defineEmits(['getMessageHistory']);
 
 const myCookie = useCookie('stl_id');
 const show_sidebar = ref(false);
 const show_icon_sidebar = ref(false);
-const show_new_session = ref(false)
+const show_new_session = ref(false);
 const popupOpen = ref<string | null>(null);
 const popupMenu = ref<HTMLElement | null>(null);
 const popupStyles = ref<any>({});
 const iconShowing = ref<string>('<i class="fa-sharp-duotone fa-solid fa-eye fa-lg text-neutral-300"></i>');
+const selectedSession = ref("");
 
 const togglePopup = (sessionId: string, event: MouseEvent) => {
 	popupOpen.value = popupOpen.value === sessionId ? null : sessionId;
@@ -84,7 +83,7 @@ const togglePopup = (sessionId: string, event: MouseEvent) => {
 };
 
 const session_id_buffer = ref<string>("");
-const getSession = async (chat_session:any) => {
+const getSession = async (chat_session: any, $event: MouseEvent) => {
 	const user_store = useCookie('stl_id');
     const user_auth = user_store.value ? JSON.parse(user_store.value) : null;
     const user_id:string = user_auth ? user_auth.user_id : "guest";
@@ -98,12 +97,7 @@ const getSession = async (chat_session:any) => {
 
 		emit('getMessageHistory', chat_history.last_message);	
 	}
-}
-
-const newSession = () =>{
-    const getChatSession = useCookie("stl_session");
-    getChatSession.value = null;
-    window.location.reload();
+	selectedSession.value = chat_session.session_id;
 }
 
 const requestDropUserSession = async() => {
@@ -113,7 +107,6 @@ const requestDropUserSession = async() => {
 	
 	const res = await dropUserSession(user_id, session_id_buffer.value);
 	if (res?.data.status){
-		console.log(res.data.message);
 		window.location.reload();
 	}
 }

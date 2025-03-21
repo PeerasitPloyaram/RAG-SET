@@ -1,7 +1,13 @@
 <template>
     <div class="sticky top-0 bg-[#0c0c0c] bg-opacity-30 h-16 flex justify-between items-center px-4 z-50">
         <div class="flex flex-row items-center ml-1">
-            <a href="/chat" class="text-white text-xl">STELLA</a>
+            <a href="/chat" class="text-white text-xl flex flex-row items-center justify-center">
+                <img src="../../public/main_logo.png"  alt="logo" class="w-10 h-10 ml-2 mr-2"/>
+                STELLA
+            </a>
+			<button class="group bg-[#262626] w-10 h-10 rounded-lg ml-4 mr-2 mt-2 mb-2 hover:bg-[#242424] opacity-85" @click="newSession">
+				<i class="fa-duotone fa-solid fa-note-sticky text-neutral-400 fa-lg group-hover:text-neutral-600 transition-colors"></i>
+			</button>
         </div>
         <div class="flex flex-row items-center"v-if=show_auth >
             <button class="text-white hover:text-neutral-200 font-medium m-2 bg-orange-700 hover:bg-orange-900 w-20 h-8 rounded-lg transition-colors" @click="goToLogin">SignIn</button>
@@ -12,7 +18,7 @@
                 <div class="flex bg-[#262626] w-10 h-10 justify-center items-center rounded-full">
                     <i class="fa-solid fa-user fa-xl text-neutral-300"></i>
                 </div>
-                <p class="text-neutral-300 ml-2 mr-4 text-xl font-semibold">{{ username }}</p>
+                <p class="text-neutral-300 ml-4 mr-4 text-xl font-medium">{{ username }}</p>
             </div>
             <button class="text-white hover:text-neutral-200 font-medium m-2 bg-orange-700 hover:bg-orange-900 w-20 h-8 rounded-lg transition-colors" @click="goToManage" v-if="showManageButton">Manage</button>
             <button class="text-white hover:text-neutral-200 font-medium m-2 bg-[#262626] hover:bg-[#171717] w-20 h-8 rounded-lg transition-colors" @click="goTologOut">LogOut</button>
@@ -50,6 +56,18 @@ $bus.on("toast", (data) => {
     }
 });
 
+
+const newSession = () =>{
+    const getChatSession = useCookie("stl_session");
+    getChatSession.value = null;
+    const route = useRoute();
+    
+    if (route.name == "admin"){
+        navigateTo("/chat");
+    }else{
+        window.location.reload();
+    }
+}
 
 
 if (! myCookie.value){

@@ -5,28 +5,33 @@
         <div class="bg-[#171717] rounded-lg border border-[#3c3c3c] flex flex-col m-2 w-full">
 
             <div class="m-4 flex flex-col">
-                <h2 class="text-xl font mb-4 text-white">Add New Company</h2>
+                <h2 class="text-xl font ml-4 mb-4 text-white">Add New Company</h2>
                 <div class="mt-4 mb-4">
-                    <input v-model="abbr_input" type="text" class="w-1/3 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2" placeholder="Stock"/>
-                    <select name="chose" id="" class="w-1/2 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white" @change="changeSector($event)">
+                    <input v-model="abbr_input" type="text" class="w-1/3 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2 outline-none" placeholder="Stock"/>
+                    <select name="chose" id="" class="w-1/2 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white outline-none cursor-pointer" @change="changeSector($event)">
                         <option value="" selected disabled>Select File Type</option>
                         <option v-for="(sector) in sectors" :key="sector.id" :value="sector.id">{{ sector.name }}</option>
                     </select>
                 </div>
                 <div class="flex flex-row">
-                    <input v-model="name_th" type="text" class="mt-2 mb-2 w-1/2 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2" placeholder="บริษัท"/>
-                    <input v-model="name_en" type="text" class="mt-2 mb-2 w-1/2 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2" placeholder="Company Name PCL"/>
+                    <input v-model="name_th" type="text" class="mt-2 mb-2 w-1/2 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2 outline-none" placeholder="บริษัท"/>
+                    <input v-model="name_en" type="text" class="mt-2 mb-2 w-1/2 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2 outline-none" placeholder="Company Name PCL"/>
                 </div>
-                <p class="text-red-500 text-xl ml-6 mt-2 mb-2">{{ error_message_add_company }}</p>
-                <p class="text-green-500 text-xl ml-6 mt-2 mb-2">{{ success_message_add_company }}</p>
-                <button @click="addNewCompany" class="ml-6 w-1/4 h-12 rounded-lg mt-4 bg-green-800 hover:bg-green-900 text-white">Add New</button>
+                <div class="flex flex-row h-14">
+                    <p class="text-red-500 text-xl ml-6 mt-2 mb-2">{{ error_message_add_company }}</p>
+                    <p class="text-green-500 text-xl ml-6 mt-2 mb-2">{{ success_message_add_company }}</p>
+                </div>
+                <button @click="addNewCompany" :disabled="disable_create_new_company_button" class="ml-6 w-1/4 h-12 rounded-lg mt-4 bg-green-800 hover:bg-green-900 text-white transition-colors hover:text-neutral-200">
+                    <p v-if="show_text_create_new_company_button">Add New</p>
+                    <i v-if="show_loading_create_new_company_button" class="fa-duotone fa-solid fa-spinner fa-xl animate-spin text-neutral-300"></i>
+                </button>
                 
             </div>
 
             <div class="m-10 flex flex-col h-100">
                 <h2 class="text-xl font mb-4 text-white">Upload and View PDF</h2>
 
-                <select name="chose" id="" class="w-36 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white" @change="changeType($event)">
+                <select name="chose" id="" class="w-36 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white outline-none cursor-pointer" @change="changeType($event)">
                     <option value="" selected disabled>Select File Type</option>
                     <option value="company">Company File</option>
                     <option value="general">General File</option>
@@ -35,9 +40,8 @@
                 <!-- Company -->
                 <div v-if="visible_company_file" class="items-center">
 
-                    <!-- <input type="file" @change="handleFileUpload" accept="application/pdf" class="" /> -->
                     <div class="flex items-center justify-center w-full mt-4 mb-4">
-                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-[#3c3c3c] border-dashed rounded-lg cursor-pointer bg-gray-200 dark:bg-[#262626] hover:bg-gray-900  ">
+                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-[#3c3c3c] border-dashed rounded-lg cursor-pointer bg-gray-200 dark:bg-[#262626] hover:bg-gray-900 transition-colors">
                             <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                 <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
@@ -51,39 +55,58 @@
 
 
                     <div class="flex flex-col items-center">
-                        <p class="text-red-500 text-xl mt-2 mb-2">{{ error_message_upload_company }}</p>
-                        <p class="text-green-500 text-xl mt-2 mb-2">{{ success_message_upload_company }}</p>
+                        <div class="flex h-10">
+                            <p class="text-red-500 text-xl mt-2 mb-2">{{ error_message_upload_company }}</p>
+                            <p class="text-green-500 text-xl mt-2 mb-2">{{ success_message_upload_company }}</p>
+                        </div>
                         <div>
                             <h2 class="text-xl mt-6 mb-4 text-white">File Info</h2>
-                            <select name="chose" id="" class="w-35 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2" @change="chageReportType($event)">
+                            <select name="chose" id="" class="w-35 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2 outline-none cursor-pointer" @change="chageReportType($event)">
                                 <option value="" selected disabled>Select File Type</option>
                                 <option value="56-1">One-Report</option>
                                 <option value="esg">ESG-Report</option>
                                 <option value="etc">Related File</option>
                             </select>
 
-                            <select name="chose" id="" class="w-35 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2" @change="showCompanyInfo($event)">
+                            <select name="chose" id="" class="w-35 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2 outline-none cursor-pointer" @change="showCompanyInfo($event)">
                                 <option value="" selected disabled>Company</option>
                                 <option v-for="(company) in companies" :key="company.abbr">
                                     {{ company.abbr }}
                                 </option>
                             </select>
 
-                            <select name="chose" id="" class="w-35 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2" @change="getYear($event)">
+                            <select name="chose" id="" class="w-35 ml-6 h-14 rounded-lg bg-[#262626] border border-[#3c3c3c] text-white p-2 outline-none cursor-pointer" @change="getYear($event)">
                                 <option value="" selected disabled>Year</option>
                                 <option v-for="(year) in years" :key="year">
                                     {{ year }}
                                 </option>
                             </select>
 
-                            <div v-if="visible_company_info" v-for="(c) in company">
-                                <p class="text-white">{{ c }}</p>
+                            <div v-if="visible_company_info" class="mt-4 mb-2">
+                                <p class="text-white ml-2 mb-2 text-xl font-semibold">Info</p>
+                                <div class="flex flex-col border border-[#373737] bg-[#262626] rounded-xl">
+                                    <p class="text-neutral-400 flex bg-[#262626] p-2 rounded-lg">Name:
+                                        <p class="text-white ml-2"><span></span> {{ company?.abbr.toUpperCase() }}</p>
+                                    </p>
+                                    <p class="text-neutral-400 flex bg-[#171717] p-2">Name in Thai:
+                                        <p class="text-white ml-2">{{ company?.name_th }}</p>
+                                    </p>
+                                    <p class="text-neutral-400 flex bg-[#262626] p-2">Name in English:
+                                        <p class="text-white ml-2">{{ company?.name_en }}</p>
+                                    </p>
+                                    <p class="text-neutral-400 flex bg-[#171717] p-2">Sector:
+                                        <p class="text-white ml-2">{{ company?.sector }}</p>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                        <div class="w-full flex flex-row items-center justify-center">
-                            <!-- <button @click="uploadFileButton" class="w-20 h-10 rounded-lg mt-4 bg-green-800 hover:bg-green-900">Upload</button> -->
+                        <div class="w-full flex flex-col items-center justify-center">
+                            <div class="flex flex-row">
+                                <input v-model="company_etc_file_name_input" v-if="visible_company_etc_file" type="text" class="mr-2 ml-2 mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" placeholder="Name Of File"/>
+                                <input v-model="company_etc_file_start_page_input" v-if="visible_company_etc_start_page_file" type="text" class="mr-2 ml-2 mt-4 mb-4 rounded-lg h-14 w-36 p-2 bg-[#262626] border border-[#3c3c3c] text-white" placeholder="Start With Page 1"/>
+                            </div>
                             <div class="flex flex-col w-full items-center">
-                                <button @click="uploadCompanyFile" class=" w-1/4 h-12 rounded-lg mt-4 bg-green-800 hover:bg-green-900 text-white">Upload</button>
+                                <button @click="uploadCompanyFile" class=" w-1/4 h-12 rounded-lg mt-4 bg-green-800 hover:bg-green-900 text-white transition-colors">Upload</button>
                             </div>
                         </div>
                     </div>
@@ -91,9 +114,8 @@
 
                 <!-- General -->
                 <div v-if="visible_general_file">
-                    <!-- <input type="file" @change="handleFileUpload" accept="application/pdf" class="" /> -->
                     <div class="flex items-center justify-center w-full mt-4 mb-4">
-                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-[#3c3c3c] border-dashed rounded-lg cursor-pointer bg-gray-200 dark:bg-[#262626] hover:bg-gray-900  ">
+                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-[#3c3c3c] border-dashed rounded-lg cursor-pointer bg-gray-200 dark:bg-[#262626] hover:bg-gray-900 transition-colors">
                             <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                 <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
@@ -106,13 +128,16 @@
                     </div> 
                     <h2 class="text-xl mt-6 mb-4 text-white">Info</h2>
                         <div class="flex flex-col">
-                            <p class="text-red-500 text-xl">{{ error_general_message }}</p>
-                            <input v-model="general_file_name_input" type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" placeholder="Name"/>
-                            <!-- <input type="text" class="mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" placeholder="Description" /> -->
-                            <textarea v-model="general_file_description" class="mt-4 mb-4 rounded-lg h-20 p-2 bg-[#262626] text-white border border-[#3c3c3c]" placeholder="Description of File Retriever"></textarea>
+                            <div class="flex h-10">
+                                <p class="text-red-500 text-xl">{{ error_general_message }}</p>
+                            </div>
+                            <div class="flex flex-row w-full">
+                                <input v-model="general_file_name_input" type="text" class="mr-2 ml-2 mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" placeholder="Name of General File"/>
+                                <input v-model="general_file_start_page_input" type="text" class="mr-2 ml-2 mt-4 mb-4 rounded-lg h-14 w-60 p-2 bg-[#262626] border border-[#3c3c3c] text-white" placeholder="Start With Page 1"/>
+                            </div>
+                            <textarea v-model="general_file_description" class="mr-2 ml-2 mt-4 mb-4 rounded-lg h-20 p-2 bg-[#262626] text-white border border-[#3c3c3c]" placeholder="Description of File Retriever"></textarea>
                         </div>
-                    <!-- <button @click="uploadFileButton" class="w-20 h-10 rounded-lg mt-4 bg-green-800">Upload</button> -->
-                    <button @click="uploadGeneralFile" class="w-1/4 h-12 rounded-lg mt-4 bg-green-800 hover:bg-green-900 text-white">Upload</button>
+                    <button @click="uploadGeneralFile" class="w-1/4 h-12 rounded-lg mt-4 bg-green-800 hover:bg-green-900 text-white transition-colors">Upload</button>
                 </div>
 
                 <br><br>
@@ -122,11 +147,16 @@
         </div>
         <div class="bg-[#262626] rounded-lg m-2 w-full">
             <div class="justify-center flex flex-row">
-                <button @click="closePreview" class=" w-1/4 h-12 rounded-lg mt-4 bg-red-900 hover:bg-red-800 text-white" v-if="close_preview_button">Close File</button>
+                <button @click="closePreview" class=" w-1/4 h-12 rounded-lg mt-4 bg-red-900 hover:bg-red-800 text-white transition-colors hover:text-neutral-200" v-if="close_preview_button">Close File</button>
                 <div class="flex flex-row w-full justify-center" v-if="!fileUrl">
-                    <button @click="render_company_data" class="m-2 w-1/4 h-12 rounded-lg mt-4 bg-[#171717] hover:bg-[#1d1d1d] text-white">Company</button>
-                    <button @click="render_general_data" class="m-2 w-1/4 h-12 rounded-lg mt-4 bg-[#171717] hover:bg-[#1d1d1d] text-white">General</button>
-                    <button @click="refreshButton" class="m-2 w-1/4 h-12 rounded-lg mt-4 bg-[#171717] hover:bg-[#1d1d1d] text-white">Refresh</button>
+                    <button @click="render_company_data" class="m-2 w-1/4 h-12 rounded-lg mt-4 mb-4 bg-[#171717] hover:bg-[#1d1d1d] text-white transition-colors hover:text-neutral-200">Company</button>
+                    <button @click="render_general_data" class="m-2 w-1/4 h-12 rounded-lg mt-4 mb-4 bg-[#171717] hover:bg-[#1d1d1d] text-white transition-colors hover:text-neutral-200">General</button>
+                    <button @click="refreshButton" class="group m-2 w-1/4 h-12 rounded-lg mt-4 mb-4 bg-[#171717] hover:bg-[#1d1d1d] text-white transition-colors hover:text-neutral-200">
+                        <div class="flex flex-row justify-center items-center">
+                            <p class="group-hover:text-gray-300">Refresh</p>
+                            <i class="ml-4 fa-solid fa-arrows-rotate fa-lg transition-all duration-700" :class="useRefresh"></i>
+                        </div>
+                    </button>
                 </div>
             </div>
 
@@ -142,7 +172,7 @@
                                 <thead class="text-xs text-gray-900 dark:text-gray-400 sticky top-0 bg-[#171717]">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
-                                            BKK
+                                            Stock
                                         </th>
                                         <th scope="col" class="px-6 py-3">
                                             Name Th
@@ -183,7 +213,7 @@
                             <div class="" v-if="visible_company_data_info">
                                 <div class="flex flex-row items-center justify-between">
                                     <p class="text-white text-lg">File {{ company_info }} Info</p>
-                                    <button @click="deleteCompanyButton" class=" w-1/4 h-12 rounded-lg bg-red-900 hover:bg-red-800 text-white">Delete Company</button>
+                                    <button @click="deleteCompanyButton" class=" w-1/4 h-12 rounded-lg bg-red-900 hover:bg-red-800 text-white transition-colors">Delete Company</button>
                                 </div>
                                 <div class="relative mt-4 mb-4 h-96 overflow-y-auto rounded-lg">
                                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 bg-[#171717]">
@@ -248,17 +278,27 @@
                         </div>
                     </div>
 
-                    <p class="text-red-500 text-xl ml-6 mt-2 mb-2">{{ error_message_change_description }}</p>
-                    <p class="text-green-500 text-xl ml-6 mt-2 mb-2">{{ success_message_change_description }}</p>
+                    <div class="flex flex-row h-10 mb-4">
+                        <p class="text-red-500 text-xl ml-6 mt-2 mb-2">{{ error_message_change_description }}</p>
+                        <p class="text-green-500 text-xl ml-6 mt-2 mb-2">{{ success_message_change_description }}</p>
+                    </div>
                     <div v-if="visible_change_general_file_data">
                         <div class="flex flex-row items-center justify-between">
                             <p>Change File {{ name_change_file }}</p>
-                            <button @click="closeDescription" class="ml-6 w-8 h-8 rounded-lg bg-red-800 hover:bg-red-900 text-white">X</button>
+                            <button @click="closeDescription" class="ml-6 w-8 h-8 rounded-lg bg-red-800 hover:bg-red-900 text-white transition-colors">
+                                <i class="fa-solid fa-xmark hover:text-neutral-200"></i>
+                            </button>
                         </div>
                         <textarea v-model="textarea_change_description" class="mt-4 mb-4 rounded-lg w-full h-20 p-2 bg-[#262626] text-white border border-[#3c3c3c]" placeholder="Description of File Retriever"></textarea>
                         <div class="flex flex-row items-center justify-between">
-                            <button @click="deleteGeneral" class="ml-6 w-28 h-10 rounded-lg mt-4 bg-red-800 hover:bg-red-900 text-white">Delete File</button>
-                            <button @click="changeDescription" class="ml-6 w-1/4 h-12 rounded-lg mt-4 bg-green-800 hover:bg-green-900 text-white">Update</button>
+                            <button @click="deleteGeneral" :disabled="show_loading_delete_general_file_button" class="ml-6 w-28 h-10 rounded-lg mt-4 bg-red-800 hover:bg-red-900 text-white transition-colors">
+                                <p v-if="!show_loading_delete_general_file_button">Delete File</p>
+                                <i v-if="show_loading_delete_general_file_button" class="fa-duotone fa-solid fa-spinner fa-xl animate-spin text-neutral-300"></i>
+                            </button>
+                            <button @click="changeDescription" :disabled="show_loading_update_description_button" class="ml-6 w-1/4 h-12 rounded-lg mt-4 bg-green-800 hover:bg-green-900 text-white transition-colors">
+                                <p v-if="!show_loading_update_description_button">Update</p>
+                                <i v-if="show_loading_update_description_button" class="fa-duotone fa-solid fa-spinner fa-xl animate-spin text-neutral-300"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -266,7 +306,7 @@
             </div>
         </div>
     </div>
-  </template>
+</template>
   
 
 <script setup lang="ts">
@@ -301,6 +341,17 @@ const visible_change_general_file_data = ref(false)
 const visible_general_data = ref(false)
 const visible_company_data = ref(true)
 const visible_company_data_info = ref(false)
+const visible_company_etc_file = ref(false)
+const visible_company_etc_start_page_file = ref(false)
+
+const disable_create_new_company_button = ref(false)
+const show_loading_create_new_company_button = ref(false)
+const show_text_create_new_company_button = ref(true)
+
+const show_loading_update_description_button = ref(false)
+const show_loading_delete_general_file_button = ref(false)
+
+const useRefresh = ref<string>("")
 
 const raw_file = ref(null)
 const fileUrl = ref<string | undefined>(undefined)
@@ -334,7 +385,11 @@ const show_preview_file = ref(false)
 const show_data_info = ref(true)
 
 const general_file_name_input = ref<string | null>(null)
+const general_file_start_page_input = ref<string | null>(null)
 const general_file_description = ref<string | null>(null)
+
+const company_etc_file_name_input = ref<string | null> (null)
+const company_etc_file_start_page_input = ref<string | null>(null)
 
 const name_change_file = ref<string | null>(null)
 const textarea_change_description = ref<string | null>(null)
@@ -356,6 +411,8 @@ const render_general_data = () => {
 }
 
 const render_company_data = () => {
+    error_message_change_description.value = ""
+    success_message_change_description.value = ""
     visible_general_data.value = false
     visible_company_data.value = true
 
@@ -373,8 +430,23 @@ const changeType = async (event:any) => {
         visible_general_file.value = true
     }
 }
-const chageReportType = (event:any) => { report_type.value = event.target.value};
-const refreshButton = () => {setUpFetch()}
+const chageReportType = (event:any) => {
+    report_type.value = event.target.value
+    if (report_type.value == "etc") {
+        visible_company_etc_file.value = true
+        visible_company_etc_start_page_file.value = true
+    }else {
+        visible_company_etc_file.value = false
+        visible_company_etc_start_page_file.value = false
+    }
+};
+const refreshButton = async () => {
+    useRefresh.value = "animate-spin text-orange-500"
+    await setUpFetch()
+    setTimeout(() => {
+        useRefresh.value = ""
+    },460)
+}
 
 const showCompanyInfo = (event:any) => {
     for (let index = 0; index < companies.value.length; index++) {
@@ -454,6 +526,11 @@ const closePreview = () => {
     show_data_info.value = true
 }
 
+const setCreateNewCompanyButton = () => {
+    disable_create_new_company_button.value = !disable_create_new_company_button.value
+    show_loading_create_new_company_button.value = !show_loading_create_new_company_button.value
+    show_text_create_new_company_button.value = !show_text_create_new_company_button.value
+}
 const addNewCompany = async () => {
     const abbr:string | null = abbr_input.value ? abbr_input.value.toLowerCase() : null;
     const th:string | null = name_th.value ? name_th.value : null;
@@ -464,6 +541,7 @@ const addNewCompany = async () => {
     success_message_add_company.value = ""
     
     try{
+        setCreateNewCompanyButton()
         const response = await createNewCompany(abbr, th, en, sector_input.value)
         abbr_input.value = ""
         name_th.value = ""
@@ -473,10 +551,14 @@ const addNewCompany = async () => {
             error_message_add_company.value = response?.data.message
             success_message_add_company.value = ""
         }else {
-            success_message_add_company.value = response?.data.message
-            error_message_add_company.value = ""
             fetchCompany()
+                success_message_add_company.value = response?.data.message
+                error_message_add_company.value = ""
+            setTimeout(() => {
+                success_message_add_company.value = ""
+            }, 5000)
         }
+        setCreateNewCompanyButton()
     }catch (error){
     }
     
@@ -493,23 +575,24 @@ const changeDescription = async () => {
     const new_description:string | null = textarea_change_description.value ? textarea_change_description.value : null
 
     if (! name){
-        error_message_change_description.value = "ERROR can't get name";
+        error_message_change_description.value = "ERROR can't get name.";
         success_message_change_description.value = null
         return
     }
     if (! new_description){
-        error_message_change_description.value = "Description must not empty";
+        error_message_change_description.value = "Description must not empty.";
         success_message_change_description.value = null
         return
     }
     if (new_description == textarea_buffer.value){
-        error_message_change_description.value = "Description duplicate";
+        error_message_change_description.value = "Description Duplicated.";
         success_message_change_description.value = null
         return
     }
 
     // send to update
     try{
+        show_loading_update_description_button.value = true
         const response = await updateDescription(name, new_description)
         if (response?.data.status == false){
             error_message_change_description.value = response.data.message
@@ -520,6 +603,7 @@ const changeDescription = async () => {
             textarea_buffer.value = new_description
             fetchGeneralFile()
         }
+        show_loading_update_description_button.value = false
     }catch{
         error_message_change_description.value = ""
     }
@@ -528,9 +612,9 @@ const changeDescription = async () => {
 const deleteGeneral = async () => {
     const name:string | null = name_change_file.value ? name_change_file.value.toLowerCase() : null
     if (!name) {error_message_change_description.value = "Name Not Found"; return}
-    // console.log(name);
     
     try{
+        show_loading_delete_general_file_button.value = true
         const response = await deleteGeneralFile(name)
         if (response?.data.status == false){
             error_message_change_description.value = response.data.message
@@ -542,9 +626,9 @@ const deleteGeneral = async () => {
                 success_message_change_description.value = null
             }, 5000);
             visible_change_general_file_data.value = false
-            // textarea_buffer.value = new_description
             fetchGeneralFile()
         }
+        show_loading_delete_general_file_button.value = false
     }catch{
 
     }
@@ -553,9 +637,7 @@ const deleteGeneral = async () => {
 const deleteCompanyButton = async () => {
     if (! company_info_buffer){
         return
-    }
-    console.log(company_info_buffer);
-    
+    }    
     try{
         const response = await deleteCompany(company_info_buffer.toLowerCase())
         if (response?.data.status == false){
@@ -601,11 +683,21 @@ const deleteEachCompanyFile = async (file:any) =>{
 }
 
 
+const isNumeric = (value:any) => {
+    return /^-?\d+$/.test(value);
+}
+
 const uploadGeneralFile = async () => {
     const name_file:string | null = general_file_name_input.value ? general_file_name_input.value : null;
     const descripton_file:string | null = general_file_description.value ? general_file_description.value : null;
+    const start_page_file:string | null = general_file_start_page_input.value ? general_file_start_page_input.value : null;
     
-    if (! name_file || !descripton_file || !raw_file.value){ error_general_message.value = "Please Enter Field"; return}
+    if (!name_file || !descripton_file || !raw_file.value || !start_page_file){ error_general_message.value = "Please Enter Field"; return}
+
+    if (!isNumeric(start_page_file)){
+        error_general_message.value = "Page Must is Number Only"; return
+    }
+    if (Number(start_page_file) <= 0){error_general_message.value = "Start Page Must Start with 1"; return}
     
     const formData = new FormData()
     if (!raw_file.value) {
@@ -615,10 +707,10 @@ const uploadGeneralFile = async () => {
     formData.append('file', raw_file.value)
     formData.append("name", name_file)
     formData.append("description", descripton_file)
+    formData.append("start_page", start_page_file)
 
     try {
         const response = await axios.post(`${config.public.api_path}/manage/upload/generalFile/${user_id}`, formData, {});
-            console.log("Response:", response.data);
             if (response.data.status == false){
                 error_general_message.value = response.data.message
             }else{
@@ -662,23 +754,43 @@ const uploadCompanyFile = async () => {
     const abbr:string | null = company.value ? company.value.abbr : null;
     const year:number | null = year_input.value ? year_input.value : null;
     const type:string | null = report_type.value ? report_type.value : null;
+    const start_page:string | null = company_etc_file_start_page_input.value ?  company_etc_file_start_page_input.value : null
+    const etc_file_name:string | null = company_etc_file_name_input.value ?  company_etc_file_name_input.value : null
 
     if (! abbr || !year || !type || !raw_file.value){ error_message_upload_company.value = "Please Enter Field"; return}
-    const file_name:string = abbr + "_" + type + "_" + year +".pdf"
+    if (type == "etc" && (!start_page || !etc_file_name)){ error_message_upload_company.value = "Pleddase Enter Field"; return}
+    
     
     const formData = new FormData()
     if (!raw_file.value) {
         return
     }
+    
+    let file_name:string = ""
+    let start_page_file:string = "1"
+
+    if (type == "etc"){
+        if (!isNumeric(start_page)){
+            error_message_upload_company.value = "Page Must is Number Only"; return
+        }
+        if (Number(start_page) <= 0){error_message_upload_company.value = "Start Page Must Start with 1"; return}
+
+        file_name = company_etc_file_name_input.value + "_" + year + ".pdf"
+        start_page_file = String(start_page)
+    }else {
+        file_name = abbr + "_" + type + "_" + year +".pdf"
+    }
+    
+
     formData.append('file', raw_file.value)
     formData.append('file_name',file_name)
     formData.append("type", type)
     formData.append("partition", abbr)
+    formData.append("start_page", start_page_file)
 
 
     try {
         const response = await axios.post(`${config.public.api_path}/manage/upload/companyFile/${user_id}`, formData, {});
-            // console.log("Response:", response.data);
             if (response.data.status == false){
                 error_message_upload_company.value = response.data.message
                 success_message_upload_company.value = null
@@ -690,11 +802,6 @@ const uploadCompanyFile = async () => {
             console.error("Error sending data:", error.response?.data || error.message);
     }
 }
-
-
-// onBeforeUnmount(() => {
-//   console.log("WebSocket is still open");
-// });
 </script>
 
 
