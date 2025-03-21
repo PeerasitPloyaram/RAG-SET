@@ -1,8 +1,31 @@
-# Nuxt Minimal Starter
+# STELLA Frontend (RAG - SEC)
+##### STELLA stands for [LLM for S.E.T]
+It is a web application that allows users and guests to ask questions and receive answers from files stored in the system, such as One Reports (56-1), ESG Reports, or other related documents.
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+###### This project is my Senior Project (014184999) in Computer Science at Kasetsart University.
 
-## Setup
+### Members
+- ##### นาย พีรสิษฐ์ พลอยอร่าม 6410451237
+
+<br>
+
+### STELLA is Contains of 2 Repositories
+- [STELLA Frontend (This Project)](https://github.com/PeerasitPloyaram/RAG-SET)
+- [STELLA Backend](https://github.com/PeerasitPloyaram/STELLA-Backend)
+
+### About This Repository
+This repository is a frontend of STELLA. It is built with Nuxt.js, a Vue.js framework.
+It incluses the following features:
+- SignIn / SignUp and Authentication
+- Chat with Long Term Memmory for User (must login)
+- Chat Memmory for Guest (no login but it have expiration time)
+- Chat History Session
+- Admin Management
+    - File Management (Create, Update, Delete, Change Description)
+    - Company Management (Create, Delete)
+
+
+### Setup
 
 Make sure to install dependencies:
 
@@ -20,7 +43,7 @@ yarn install
 bun install
 ```
 
-## Development Server
+### Development Server
 
 Start the development server on `http://localhost:3000`:
 
@@ -38,7 +61,7 @@ yarn dev
 bun run dev
 ```
 
-## Production
+### Production
 
 Build the application for production:
 
