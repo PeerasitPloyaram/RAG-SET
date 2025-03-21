@@ -37,9 +37,9 @@
 
 					<!-- Popup -->
 					<div ref="popupMenu" :style="popupStyles" v-if="popupOpen" class="absolute mt-2 w-28 bg-[#1e1e1e] border border-[#3c3c3c] rounded-lg shadow-lg">
-					<button class="w-full px-3 py-2 hover:bg-[#2c2c2c] text-left" @click="">
+					<!-- <button class="w-full px-3 py-2 hover:bg-[#2c2c2c] text-left" @click="">
 						Share
-					</button>
+					</button> -->
 					<button class="w-full px-3 py-2 hover:bg-[#2c2c2c] text-left text-red-400" @click="requestDropUserSession">
 						Delete
 					</button>
