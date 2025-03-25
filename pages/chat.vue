@@ -72,43 +72,46 @@ const fetchHistory = async () => {
                 session_store.value = null;
             }
 
-            for (let index = 0; index < chat_history.message.length; index++) {
-                const element = chat_history.message[index];
-                if (!element.isUser){
-                    element.text = formatStructuredText(element.text);
-                    messages.value.push(element);
-                }else{
-                    messages.value.push(element);
+            if (chat_history.message) {
+                for (let index = 0; index < chat_history.message.length; index++) {
+                    const element = chat_history.message[index];
+                    if (!element.isUser){
+                        element.text = formatStructuredText(element.text);
+                        messages.value.push(element);
+                    }else{
+                        messages.value.push(element);
+                    }
                 }
-            }
-        }else if(chat_history.type === "user"){
-            for (let index = 0; index < chat_history.last_message.length; index++) {
-                const element = chat_history.last_message[index];                
-                if (!element.isUser){
-                    element.text = formatStructuredText(element.text);
-                    messages.value.push(element);
-                }else{
-                    messages.value.push(element);
+            };
+        }else if(chat_history.type === "user"){     
+            if (chat_history.last_message) {
+                for (let index = 0; index < chat_history.last_message.length; index++) {
+                    const element = chat_history.last_message[index];                
+                    if (!element.isUser){
+                        element.text = formatStructuredText(element.text);
+                        messages.value.push(element);
+                    }else{
+                        messages.value.push(element);
+                    }
                 }
-            }
-            
-            const sortedChatHistory = chat_history.chat_history.sort((a:any, b:any) => 
-                new Date(b.create_date).getTime() - new Date(a.create_date).getTime()
-            );
+                const sortedChatHistory = chat_history.chat_history.sort((a:any, b:any) => 
+                    new Date(b.create_date).getTime() - new Date(a.create_date).getTime()
+                );
 
-            for (let index = 0; index < sortedChatHistory.length; index++) {
-                const element = sortedChatHistory[index];
-                const ch_name = element;
-                const c:string = ch_name.chat_name;
-                if (c) {
-                    chat_history_sidebar.value.push({
-                    "name": c.slice(0, 19),
-                    "session_id":element.chat_session,
-                    "create_at": element.create_date
-                    })
+                for (let index = 0; index < sortedChatHistory.length; index++) {
+                    const element = sortedChatHistory[index];
+                    const ch_name = element;
+                    const c:string = ch_name.chat_name;
+                    if (c) {
+                        chat_history_sidebar.value.push({
+                        "name": c.slice(0, 19),
+                        "session_id":element.chat_session,
+                        "create_at": element.create_date
+                        })
 
-                }
-            }            
+                    }
+                }  
+            }          
         }
     }
 }
