@@ -9,7 +9,7 @@
     
             <div id="main_chat" ref="chatContainer"  class="flex-grow text-white md:w-8/12 p-16 rounded-lg overflow-y-auto min-h-0 space-y-4">
                 <div v-for="(msg, index) in messages" :key="index" :class="msg.isUser ? 'text-right': 'text-left'">
-                    <div :class="msg.isUser ? 'bg-orange-700 text-white p-3 rounded-xl inline-block' : 'text-left bg-[#262626] rounded-xl inline-block text-white p-4'">
+                    <div :class="msg.isUser ? 'text-left bg-orange-700 text-white p-3 rounded-xl inline-block' : 'text-left bg-[#262626] rounded-xl inline-block text-white p-4'">
                         <div v-html="msg.text"></div>
                     </div>
                 </div>

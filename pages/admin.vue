@@ -679,7 +679,7 @@ const deleteEachCompanyFile = async (file:any) =>{
             success_company_info.value = null
         }
     }catch(err){
-        console.log(err);
+        console.error(err);
     }
         
 }
