@@ -131,7 +131,7 @@ const requestSignUp = async () => {
                 error_input.value = res?.data.message;
             }
         }catch (error){
-            console.log(error);   
+            console.error(error);   
         }
     }
 }

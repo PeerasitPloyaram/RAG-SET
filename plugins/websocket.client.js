@@ -14,11 +14,11 @@ export default defineNuxtPlugin((nuxtApp) => {
     const socket = new WebSocket(wsUrl);
   
     socket.onopen = () => {
-        console.log("WebSocket Connected");
+        // console.log("WebSocket Connected");
     };
 
     socket.onmessage = (event) => {
-        console.log("Contact: Notification from Server");
+        // console.log("Contact: Notification from Server");
         const notification_contact = JSON.parse(event.data);
         
         nuxtApp.$bus.emit("toast", {
@@ -33,7 +33,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     };
 
     socket.onclose = () => {
-        console.log("WebSocket closed Reconnecting...");
+        // console.log("WebSocket closed Reconnecting...");
         setTimeout(() => {
             socket = new WebSocket(wsUrl);
         }, 3000);

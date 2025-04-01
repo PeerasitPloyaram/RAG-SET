@@ -53,7 +53,7 @@ export default defineComponent({
     // Method to handle message sending
     sendMessage() {
       if (this.message.trim()) {
-        console.log('Message Sent:', this.message);
+        // console.log('Message Sent:', this.message);
         this.message = '';
       }
     },
